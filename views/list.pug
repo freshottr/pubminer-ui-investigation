@@ -19,11 +19,11 @@ html(lang="en")
                     label(for="searchTerm") Search Terms
                     input(class="form-control" type="text" style="width: 400px" name="searchTerm" id="searchTerm")
                 button(type="submit" class="btn btn-outline-primary search-button") Search
-        if items.length > 0
-            p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{itemsReturned} of #{itemsFound} results found for "#{searchTerm}"
+        if results.items.length > 0
+            p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{results.itemsReturned} of #{results.itemsFound} results found for "#{results.searchTerm}"
             div(class='container-fluid')
                 div(class='list-group list-view-pf list-view-pf-view')
-                    each item in items
+                    each item in results.items
                         div(class='list-group-item')
                             div(class="list-view-pf-checkbox")
                                 input(type="checkbox")
@@ -36,10 +36,13 @@ html(lang="en")
                                             span
                                                 strong= item.title
                                             br
+                                            - var displayComma = false
                                             each author, index in item.authors
-                                                span= author.name
-                                                if index < item.authors.length - 1
-                                                    span ,&nbsp;
+                                                if author.authtype == "Author"
+                                                    if displayComma == true
+                                                        span ,&nbsp;
+                                                    span= author.name
+                                                    - displayComma = true
                                     div(class="list-view-pf-additional-info")
                                         div(class="list-view-pf-additional-info-item")
                                             span(class="pficon pficon-screen")

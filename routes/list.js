@@ -8,10 +8,7 @@ router.get('/', (request, response) => {
     pubMedQuery.search(request.query.searchTerm, (queryResult) => {
 
         // Render the 'list' view using query results, if any
-        response.render('list', {"searchTerm": queryResult.searchTerm,
-                                 "itemsFound": queryResult.itemsFound,
-                                 "itemsReturned": queryResult.itemsReturned,
-                                 "items": queryResult.items});
+        response.render('list', {"results": queryResult});
     });
 
 });
