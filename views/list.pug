@@ -1,0 +1,55 @@
+//-
+   list.pug
+
+   Display the list view.  The table displays search results.
+
+doctype html
+html(lang="en")
+    head
+        title PubMiner
+        meta(charset="utf-8")
+        link(rel='stylesheet' href='css/mystyles.css')
+    body
+        nav(class="navbar navbar-pf-vertical")
+            div(class="navbar-header")
+                a(href="/" class="navbar-brand") PubMiner
+        div(style='margin: 24px 0px 24px 20px')
+            form(method='GET' action='/search')
+                div(class="form-group")
+                    label(for="searchTerm") Search Terms
+                    input(class="form-control" type="text" style="width: 400px" name="searchTerm" id="searchTerm")
+                button(type="submit" class="btn btn-outline-primary search-button") Search
+        if results.length > 0
+            p(style='margin: 24px 0px 0px 20px; font-style: italic;') Found #{count} results for "#{searchTerm}"
+            div(class='container-fluid')
+                div(class='list-group list-view-pf list-view-pf-view')
+                    each result in results
+                        div(class='list-group-item')
+                            div(class="list-view-pf-checkbox")
+                                input(type="checkbox")
+                            div(class="list-view-pf-main-info")
+                                div(class="list-view-pf-body")
+                                    div(class="list-view-pf-description")
+                                        div(class="list-group-item-heading")
+                                            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${result.uid}`) #{result.uid}
+                                        div(class="list-group-item-text")
+                                            span
+                                                strong= result.title
+                                            br
+                                            each author, index in result.authors
+                                                span= author.name
+                                                if index < result.authors.length - 1
+                                                    span ,&nbsp;
+                                    div(class="list-view-pf-additional-info")
+                                        div(class="list-view-pf-additional-info-item")
+                                            span(class="pficon pficon-screen")
+                                            span Age 19-64
+                                        div(class="list-view-pf-additional-info-item")
+                                            span(class="pficon pficon-cluster")
+                                            span Male 50%
+                                        div(class="list-view-pf-additional-info-item")
+                                            span(class="pficon pficon-container-node")
+                                            span Female 50%
+                                        div(class="list-view-pf-additional-info-item")
+                                            span(class="pficon pficon-image")
+                                            span Race: Other
