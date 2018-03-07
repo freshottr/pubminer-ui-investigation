@@ -4,7 +4,6 @@ var express = require('express');
 var path = require('path');
 
 var list = require('./routes/list');
-var search = require('./routes/search');
 
 var app = express();
 app.set('views', './views');    // where to find the views
@@ -23,7 +22,6 @@ app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 
 // The app recognizes these routes:
-app.use('/search', search);
 app.use('/list', list);
 
 // Handle anything we don't specifically recognize

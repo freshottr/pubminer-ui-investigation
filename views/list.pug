@@ -14,16 +14,16 @@ html(lang="en")
             div(class="navbar-header")
                 a(href="/" class="navbar-brand") PubMiner
         div(style='margin: 24px 0px 24px 20px')
-            form(method='GET' action='/search')
+            form(method='GET' action='/list')
                 div(class="form-group")
                     label(for="searchTerm") Search Terms
                     input(class="form-control" type="text" style="width: 400px" name="searchTerm" id="searchTerm")
                 button(type="submit" class="btn btn-outline-primary search-button") Search
-        if results.length > 0
-            p(style='margin: 24px 0px 0px 20px; font-style: italic;') Found #{count} results for "#{searchTerm}"
+        if items.length > 0
+            p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{itemsReturned} of #{itemsFound} results found for "#{searchTerm}"
             div(class='container-fluid')
                 div(class='list-group list-view-pf list-view-pf-view')
-                    each result in results
+                    each item in items
                         div(class='list-group-item')
                             div(class="list-view-pf-checkbox")
                                 input(type="checkbox")
@@ -31,14 +31,14 @@ html(lang="en")
                                 div(class="list-view-pf-body")
                                     div(class="list-view-pf-description")
                                         div(class="list-group-item-heading")
-                                            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${result.uid}`) #{result.uid}
+                                            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${item.uid}`) #{item.uid}
                                         div(class="list-group-item-text")
                                             span
-                                                strong= result.title
+                                                strong= item.title
                                             br
-                                            each author, index in result.authors
+                                            each author, index in item.authors
                                                 span= author.name
-                                                if index < result.authors.length - 1
+                                                if index < item.authors.length - 1
                                                     span ,&nbsp;
                                     div(class="list-view-pf-additional-info")
                                         div(class="list-view-pf-additional-info-item")
