@@ -13,12 +13,16 @@ html(lang="en")
         nav(class="navbar navbar-pf-vertical")
             div(class="navbar-header")
                 a(href="/" class="navbar-brand") PubMiner
-        div(style='margin: 24px 0px 24px 20px')
-            form(method='GET' action='/list')
-                div(class="form-group")
-                    label(for="searchTerm") Search Terms
-                    input(class="form-control" type="text" style="width: 400px" name="searchTerm" id="searchTerm")
-                button(type="submit" class="btn btn-outline-primary search-button") Search
+        div(class="container-fluid")
+            div(class="row toolbar-pf")
+                div(class="col-sm-12")
+                    form(class="toolbar-pf-actions" method='GET' action='/list')
+                        div(class="form-group toolbar-pf-filter")
+                            div(class="input-group")
+                                input(id="searchTerm" name="searchTerm" class="form-control" type="text" placeholder="Search Terms" style="width: 400px")
+                        div(class="form-group toolbar-pf-find")
+                            button(class="btn btn-link btn-find" type="submit")
+                                span(class="fa fa-search")
         if results.items.length > 0
             p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{results.itemsReturned} of #{results.itemsFound} results found for "#{results.searchTerm}"
             div(class='container-fluid')
