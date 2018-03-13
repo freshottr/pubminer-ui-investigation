@@ -1,8 +1,6 @@
 var app = require('../app');
 var http = require('http');
 
-app.locals.results = [];
-
 // Set the port that the application will listen on.
 var port = 8081;
 app.set('port', port);
