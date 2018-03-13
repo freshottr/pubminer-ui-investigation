@@ -19,6 +19,7 @@ app.get('/', (request, response) => {
 app.use('/static', express.static(path.join(__dirname, 'public')));
 app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
 app.use('/scripts', express.static(path.join(__dirname, 'public', 'scripts')));
+app.use('/data', express.static(path.join(__dirname, 'public', 'data')));
 
 // Allow static files from node_modules to be served.
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
