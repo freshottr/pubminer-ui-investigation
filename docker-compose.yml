@@ -1,0 +1,21 @@
+version: '3.0'
+
+services:
+
+  postgres:
+    image: postgres:10.3
+    network_mode: "host"
+    volumes:
+      - ./docker/postgres/pubminer-schema.sql:/docker-entrypoint-initdb.d/init-schema.sql
+    environment:
+      POSTGRES_USER: root_user
+      POSTGRES_PASSWORD: root_pw
+      POSTGRES_DB: pubminer
+#    ports:
+#      - 5432:5432
+
+#networks:
+#  default:
+
+#psql -h 192.168.99.100 -d pubminer -U root --password
+#docker run --rm -it -p 5432:5432 --name ian_pg postgres -e `POSTGRES_USER=root` -e `POSTGRES_PASSWORD=root` -e `POSTGRES_DB=db`
