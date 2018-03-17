@@ -19,7 +19,7 @@ let pubMedApi = {
         // results object initialized with 'no results found' data
         var results = {searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []};
 
-        if (typeof searchTerm === "undefined" || searchTerm.trim() == "") {
+        if (typeof searchTerm === "undefined" || searchTerm.trim().length === 0) {
             // signal the caller that the (empty) results are ready
             callback(results);
 
@@ -82,7 +82,6 @@ let pubMedApi = {
                     return;
                 }
 
-                result.items = [];
                 try {
                     parsed
                         .PubmedArticle
@@ -93,14 +92,12 @@ let pubMedApi = {
                         .forEach((abstractTxt) => {
                             console.log(abstractTxt['@'].Label); // the abstract type
                             console.log(abstractTxt['#']); // the abstract's text
-                            result.items.push({kind: abstractTxt['@'].Label, text: abstractTxt['#']})
+                            result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
                         });
                 }
                 catch(e) {
                     console.log(`error extracting the abstract's text from the document ${e}`);
-                    delete result.items;
                     result.error = "unexpected document format";
-                    return;
                 }
             });
 
