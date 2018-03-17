@@ -1,13 +1,13 @@
 // search.js
 
-var httpRequest = require('request');
+let httpRequest = require('request');
 
-var pubMedApi = {
+// base url for all E-Utilities requests
+const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+
+let pubMedApi = {
 
     search : function(searchTerm, callback) {
-
-        // base url for all E-Utilities requests
-        var eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
         // setup the api key parameter if an api key is available.
         var apiKey = '';
@@ -57,6 +57,17 @@ var pubMedApi = {
                 });
             });
         }
+    },
+
+    fetchResultDetail: function (pmcId, callback) {
+        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=PMC&id=${pmcId}`;
+        console.log(`fetching details at ${uri}`);
+        httpRequest(uri, null, (err, response, body) => {
+            console.log('error:', err); // Print the error if one occurred
+            console.log('statusCode:', response && response.statusCode); // Print the response status code if a response was received
+            console.log('body:', body);
+            callback(body);
+        });
     }
 }
 
