@@ -8,6 +8,7 @@ services:
     volumes:
       - ./docker/postgres/pubminer-schema.sql:/docker-entrypoint-initdb.d/init-schema.sql
     environment:
+      # These credentials are only used for local development
       POSTGRES_USER: root_user
       POSTGRES_PASSWORD: root_pw
       POSTGRES_DB: pubminer
