@@ -11,10 +11,9 @@ let pubMedApi = {
     search : function(searchTerm, callback) {
 
         // setup the api key parameter if an api key is available.
-        var apiKey = '';
-        var apiKeyParam = '';
-        if (apiKey !== '') {
-            apiKeyParam = `&api_key=${apiKey}`
+        let apiKey = '';
+        if (process.env.EUTILS_API_KEY) {
+            apiKey = `&api_key=${process.env.EUTILS_API_KEY}`
         }
 
         // results object initialized with 'no results found' data
@@ -26,13 +25,13 @@ let pubMedApi = {
 
         } else {
             // E-Search request
-            var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=PMC&term=${searchTerm}&retmode=json&usehistory=y${apiKeyParam}`;
+            var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=PMC&term=${searchTerm}&retmode=json&usehistory=y${apiKey}`;
             httpRequest(searchUrl, {json: true}, (err, response, body) => {
                 if (err) {
                     return console.log(err);
                 }
 
-                // populate the results object with the pices we already know
+                // populate the results object with the pieces we already know
                 results.searchTerm = searchTerm;
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
@@ -40,7 +39,7 @@ let pubMedApi = {
                 // Build the e-summary url using the webenv and querykey.
                 var querykey = body.esearchresult.querykey;
                 var webenv = body.esearchresult.webenv;
-                var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=PMC&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=20${apiKeyParam}`;
+                var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=PMC&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=20${apiKey}`;
 
                 // E-Summary request
                 httpRequest(summaryUrl, {json: true}, (err, response, body) => {

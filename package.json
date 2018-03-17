@@ -11,6 +11,7 @@
   "author": "Joe Bockskopf",
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^5.0.1",
     "express": "^4.16.2",
     "mysql": "latest",
     "patternfly": "^3.41.3",

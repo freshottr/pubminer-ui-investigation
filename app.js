@@ -7,6 +7,7 @@ var results = require('./routes/results');
 var detail = require('./routes/detail');
 // var mysql = require('mysql');
 var app = express();
+require('dotenv').config();
 
 app.set('views', './views');    // where to find the views
 app.set('view engine', 'pug');  // use pug as the template engine
@@ -42,8 +43,8 @@ module.exports = app;
 // testing db connection
 // var connection = mysql.createConnection({
 //   host     : 'pubminerdb.cxw9xj69bgfa.us-east-1.rds.amazonaws.com',
-//   user     : 'pubminer',
-//   password : 'pubpassword',
+//   user     : '',
+//   password : '',
 //   port     : '3306',
 //   database : 'pubminerdb'
 // });
