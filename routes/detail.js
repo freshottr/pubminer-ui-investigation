@@ -11,9 +11,8 @@ router.get('/:pmcId', (request, response) => {
     pubMedQuery.fetchResultDetail(pmcId, (details) => {
 
         console.log(details);
+        // TODO: render a proper view/template here
         response.send(details);
-        // Render the 'list' view using query results, if any
-        // response.render('results', {"results": queryResult});
     });
 
 });
