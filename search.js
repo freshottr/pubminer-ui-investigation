@@ -1,13 +1,14 @@
 // search.js
 
-var httpRequest = require('request');
+let httpRequest = require('request');
+let xmlSimple   = require('xml-simple');
 
-var pubMedApi = {
+// base url for all E-Utilities requests
+const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
+
+let pubMedApi = {
 
     search : function(searchTerm, callback) {
-
-        // base url for all E-Utilities requests
-        var eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
         // setup the api key parameter if an api key is available.
         var apiKey = '';
@@ -57,7 +58,56 @@ var pubMedApi = {
                 });
             });
         }
+    },
+
+    fetchResultDetail: function (pmcId, callback) {
+        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pubmed&id=${pmcId}&retmode=xml`;
+        console.log(`fetching details at ${uri}`);
+        httpRequest(uri, null, (err, response, body) => {
+
+            let result = {};
+
+            if (err) {
+                console.log(`error fetching details for ${pmcId}`, err);
+                result.error = "failed to get publication details";
+                return;
+            }
+
+            console.log('body:', body); // TODO: remove verbose logging later
+
+            // extract the abstracts from result details
+            xmlSimple.parse(body, (err, parsed) => {
+                if (err) {
+                    console.log(`failed to parse ${err}`);
+                    result.error = "unable to parse publication details";
+                    return;
+                }
+
+                result.items = [];
+                try {
+                    parsed
+                        .PubmedArticle
+                        .MedlineCitation
+                        .Article
+                        .Abstract
+                        .AbstractText
+                        .forEach((abstractTxt) => {
+                            console.log(abstractTxt['@'].Label); // the abstract type
+                            console.log(abstractTxt['#']); // the abstract's text
+                            result.items.push({kind: abstractTxt['@'].Label, text: abstractTxt['#']})
+                        });
+                }
+                catch(e) {
+                    console.log(`error extracting the abstract's text from the document ${e}`);
+                    delete result.items;
+                    result.error = "unexpected document format";
+                    return;
+                }
+            });
+
+            callback(result);
+        });
     }
-}
+};
 
 module.exports = pubMedApi;
