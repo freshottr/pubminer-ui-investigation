@@ -60,8 +60,8 @@ let pubMedApi = {
     },
 
     fetchResultDetail: function (pmcId, callback) {
-        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pubmed&id=${pmcId}&retmode=xml`;
-        console.log(`fetching details at ${uri}`);
+        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pmc&id=${pmcId}&retmode=xml`;
+        console.log(`fetching details for ${pmcId} at ${uri}`);
         httpRequest(uri, null, (err, response, body) => {
 
             let result = {};
@@ -84,16 +84,27 @@ let pubMedApi = {
 
                 try {
                     parsed
-                        .PubmedArticle
-                        .MedlineCitation
-                        .Article
-                        .Abstract
-                        .AbstractText
-                        .forEach((abstractTxt) => {
-                            console.log(abstractTxt['@'].Label); // the abstract type
-                            console.log(abstractTxt['#']); // the abstract's text
-                            result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
+                        .article
+                        .front
+                        ['article-meta']
+                        .abstract
+                        .sec
+                        .forEach(s => {
+                            console.log(`${s.title.toLowerCase()} ${s.p['#']}`);
+                            result[s.title.toLowerCase()] = s.p["#"];
                         });
+
+                    // parsed
+                    //     .PubmedArticle
+                    //     .MedlineCitation
+                    //     .Article
+                    //     .Abstract
+                    //     .AbstractText
+                    //     .forEach((abstractTxt) => {
+                    //         console.log(abstractTxt['@'].Label); // the abstract type
+                    //         console.log(abstractTxt['#']); // the abstract's text
+                    //         result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
+                    //     });
                 }
                 catch(e) {
                     console.log(`error extracting the abstract's text from the document ${e}`);

@@ -27,7 +27,7 @@ block scripts
                 if($(this).find(".fa-angle-down").length > 0) {
                     var eBody = $(this).closest("div.list-group-item").find("#expansionBody");
                     // Get the content from back end
-                    $.get('/detail/' + $(this).find("#pmid").val(), null, function(response) {
+                    $.get('/detail/' + $(this).find("#uid").val(), null, function(response) {
                         if (response.error) {
                             eBody.text(response.error);
                         } else {
@@ -68,15 +68,15 @@ block content
                             div(class="list-view-pf-checkbox")
                                 input(type="checkbox")
                             div(class="list-view-pf-main-info")
-                                div(class="list-view-pf-body")
+                                div(class="list-group-item-heading")
+                                    a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${item.uid}`) #{item.uid}
+                                    input(type="hidden" id="uid" value=`${item.uid}`)
+                                    each articleid in item.articleids
+                                        if articleid.idtype == "pmid"
+                                            br
+                                            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${articleid.value}`) #{articleid.value}
+                            div(class="list-view-pf-body")
                                     div(class="list-view-pf-description")
-                                        div(class="list-group-item-heading")
-                                            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${item.uid}`) #{item.uid}
-                                            each articleid in item.articleids
-                                                if articleid.idtype == "pmid"
-                                                    br
-                                                    a(target="_blank" href=`/detail/${articleid.value}`) #{articleid.value}
-                                                    input(type="hidden" id="pmid" value=`${articleid.value}`)
                                         div(class="list-group-item-text")
                                             span
                                                 strong= item.title
