@@ -7,6 +7,6 @@
  - In your browser, navigate to http:\\localhost:8081
 
  ### Instruction For Running PostgreSQL ###
- -- [Install Docker Compose](https://docs.docker.com/compose/install/#install-compose) 
- -- Run `sudo docker up` from pubminer-ui-investigation directory 
- -- To interact directly with db, run `psql -h localhost -p 5432 -d pubminer -U root_user --password root_pw`
+ - [Install Docker Compose](https://docs.docker.com/compose/install/#install-compose) 
+ - Run `sudo docker up` from pubminer-ui-investigation directory 
+ - To interact directly with db, run `psql -h localhost -p 5432 -d pubminer -U root_user --password root_pw`
