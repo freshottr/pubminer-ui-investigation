@@ -1,12 +1,28 @@
--- Initializes the pubminer schema. This is a stub schema and should be replaced with the
--- schema definition
+-- Initializes the pubminer schema. 
 
-CREATE TABLE demographic_index(
-    pmc_id character varying(30),
-    participants integer NULL,
-    median_age smallint  NULL
+CREATE TABLE article (
+  pmcid character varying(15),
+  pmid character varying(15)
+)
+
+;CREATE TABLE gender (
+  pmcid character varying(15),
+  value_type character varying(255),
+  gender_type character varying(255),
+  val integer
 );
 
+CREATE TABLE race (
+  pmcid character varying(15),
+  value_type character varying(255),
+  race_type character varying(255),
+  val integer
+);
 
+CREATE TABLE age (
+  pmcid character varying(15),
+  value_type character varying(255),
+  val integer
+);
 
 

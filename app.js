@@ -1,11 +1,9 @@
 // app.js
-
 var express = require('express');
 var path = require('path');
 var list = require('./routes/list');
 var results = require('./routes/results');
 var detail = require('./routes/detail');
-// var mysql = require('mysql');
 var app = express();
 require('dotenv').config();
 
@@ -38,32 +36,3 @@ app.use((request, response, next) => {
 });
 
 module.exports = app;
-
-
-// testing db connection
-// var connection = mysql.createConnection({
-//   host     : 'pubminerdb.cxw9xj69bgfa.us-east-1.rds.amazonaws.com',
-//   user     : '',
-//   password : '',
-//   port     : '3306',
-//   database : 'pubminerdb'
-// });
-//
-// connection.connect(function(err) {
-//   if (err) {
-//     console.error('Database connection failed: ' + err.stack);
-//     return;
-//   }
-//
-//   console.log('Connected to pubminerdb.');
-//
-//   //sample query
-//   var query = "SELECT * FROM pubminerdb.gender_race"
-//
-//   connection.query(query, function (err, result) {
-//     if (err) throw err;
-//     console.log(result);
-//   });
-//
-// });
-//connection.end();
