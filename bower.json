@@ -1,0 +1,22 @@
+{
+  "name": "PubMiner",
+  "authors": [
+    "Joe Bockskopf <jbockskopf@g.harvard.edu>",
+    "Alberto Garza <albertogarza22@gmail.com>",
+    "Ian Smith <i.m.k.smith@gmail.com>"
+  ],
+  "description": "CSCIE-599 Spring 2018 PubMiner Project",
+  "main": "",
+  "license": "MIT",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "patternfly": "^3.42.0"
+  }
+}

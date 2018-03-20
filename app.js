@@ -21,6 +21,9 @@ app.use('/css', express.static(path.join(__dirname, 'public', 'css')));
 app.use('/scripts', express.static(path.join(__dirname, 'public', 'scripts')));
 app.use('/data', express.static(path.join(__dirname, 'public', 'data')));
 
+// bower_components should be moved to a vendor script folder
+app.use('/bower_components', express.static(path.join(__dirname, 'bower_components')));
+
 // Allow static files from node_modules to be served.
 app.use('/node_modules', express.static(path.join(__dirname, 'node_modules')));
 

@@ -6,7 +6,9 @@ html(lang="en")
     head
         title PubMiner
         meta(charset="utf-8")
-        link(rel='stylesheet' href='css/mystyles.css')
+        //- bower_components should be moved to a vendor css folder.
+        link(rel='stylesheet' href='bower_components/patternfly/dist/css/patternfly.min.css')
+        link(rel='stylesheet' href='bower_components/patternfly/dist/css/patternfly-additions.min.css')
         block scripts
     body
         nav(class="navbar navbar-pf-vertical")

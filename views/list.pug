@@ -5,9 +5,10 @@
 
 extends layout.pug
 block scripts
-    script(src="scripts/jquery.min.js")
-    script(src="scripts/jquery.dataTables.js")
-    script(src="scripts/patternfly-functions-data-tables.js")
+    //- bower_components should be moved to a vendor script directory
+    script(src="bower_components/jquery/dist/jquery.min.js")
+    script(src="bower_components/datatables/media/js/jquery.dataTables.min.js")
+    script(src="bower_components/patternfly/dist/js/patternfly-functions-data-tables.js")
     script(src="scripts/wntable.js")
 block content
     div(class="container-fluid")

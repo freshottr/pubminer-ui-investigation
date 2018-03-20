@@ -1,23 +1,25 @@
 {
-  "name": "pmc-oa-test",
+  "name": "PubMiner",
   "version": "1.0.0",
-  "description": "Test app for querying PMC via api",
+  "description": "CSCIE-599 Spring 2018 PubMiner Project",
   "main": "index.js",
   "scripts": {
     "start": "node ./bin/www",
     "start-dev": "nodemon --inspect ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Joe Bockskopf",
+  "contributors": [
+    "Joe Bockskopf <jbockskopf@g.harvard.edu>",
+    "Alberto Garza <albertogarza22@gmail.com>",
+    "Ian Smith <i.m.k.smith@gmail.com>"
+  ],
   "license": "ISC",
   "dependencies": {
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
-    "mysql": "latest",
-    "patternfly": "^3.41.3",
     "pg": "^7.4.1",
-    "pug": "^2.0.0-rc.4",
-    "request": "^2.81.0",
+    "pug": "^2.0.1",
+    "request": "^2.85.0",
     "xml-simple": "^0.0.1"
   }
 }
