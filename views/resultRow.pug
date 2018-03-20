@@ -1,0 +1,55 @@
+//-
+    resultRow.pug
+
+    Display an individual result row.
+
+div(class='list-group-item')
+    div(class="list-group-item-header")
+        div(class="list-view-pf-expand")
+            span(class="fa fa-angle-right")
+        div(class="list-view-pf-checkbox")
+            input(type="checkbox")
+        div(class="list-view-pf-main-info")
+            div(class="list-view-pf-body")
+                div(class="list-view-pf-description")
+                    //- Hidden input field so we can retrieve a PMC id
+                    input(type="hidden" id="uid" value=`${item.uid}`)
+                    div(class="list-group-item-text")
+                        //- Title
+                        span
+                            strong= item.title
+                        //- Authors list, comma separated
+                        div(class="pm-list-row-authors")
+                            - var displayComma = false
+                            each author, index in item.authors
+                                if author.authtype == "Author"
+                                    if displayComma == true
+                                        span ,&nbsp;
+                                    span= author.name
+                                    - displayComma = true
+                div(class="list-view-pf-additional-info")
+                    div(class="list-view-pf-additional-info-item")
+                        span(class="pficon pficon-screen")
+                        span Age 19-64
+                    div(class="list-view-pf-additional-info-item")
+                        span(class="pficon pficon-cluster")
+                        span Male 50%
+                    div(class="list-view-pf-additional-info-item")
+                        span(class="pficon pficon-container-node")
+                        span Female 50%
+                    div(class="list-view-pf-additional-info-item")
+                        span(class="pficon pficon-image")
+                        span Race: Other
+    //- Expansion section
+    div(class="list-group-item-container container-fluid hidden")
+        div(class="close")
+            span(class="pficon pficon-close")
+        div
+            span PubMed Central:&nbsp;
+            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${item.uid}`) #{item.uid}
+            each articleid in item.articleids
+                if articleid.idtype == "pmid"
+                    span(style="padding-left: 10px") PubMed:&nbsp;
+                    a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${articleid.value}`) #{articleid.value}
+        //- Expansion Body gets replaced with content from an API call.
+        div(class="expansion-body" id="expansionBody")
