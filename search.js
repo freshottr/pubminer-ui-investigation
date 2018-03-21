@@ -6,6 +6,10 @@ let xmlSimple   = require('xml-simple');
 // base url for all E-Utilities requests
 const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
+let errorOf = (description) => {
+  return {error: description};
+};
+
 let pubMedApi = {
 
     search : function(searchTerm, callback) {
@@ -78,21 +82,39 @@ let pubMedApi = {
             xmlSimple.parse(body, (err, parsed) => {
                 if (err) {
                     console.log(`failed to parse ${err}`);
-                    result.error = "unable to parse publication details";
+                    result = errorOf("unable to parse publication details");
                     return;
                 }
 
                 try {
-                    parsed
+                    let abstract = parsed
                         .article
                         .front
                         ['article-meta']
-                        .abstract
-                        .sec
-                        .forEach(s => {
-                            console.log(`${s.title.toLowerCase()} ${s.p['#']}`);
-                            result[s.title.toLowerCase()] = s.p["#"];
-                        });
+                        .abstract;
+
+                    if (!abstract) {
+                        result = errorOf("article does not contain an abstract");
+                        return;
+                    }
+
+                    // check for sections
+                    if (Array.isArray(abstract.sec)) {
+                        abstract
+                            .sec
+                            .forEach(s => {
+                                console.log(`${s.title.toLowerCase()} ${s.p['#']}`);
+                                result[s.title.toLowerCase()] = s.p["#"];
+                            });
+
+                    // check for a paragraph (ex. PMC 5858162)
+                    } else if (abstract.p) {
+                        console.log(`extracting paragraph ${abstract.p}`);
+                        result.abstract = abstract.p['#'];
+                    } else {
+                        result = errorOf(`unexpected abstract format '${abstract}'`);
+                    }
+
 
                     // parsed
                     //     .PubmedArticle
