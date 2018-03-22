@@ -19,14 +19,8 @@ div(class='list-group-item')
                         span
                             strong= item.title
                         //- Authors list, comma separated
-                        div(class="pm-list-row-authors")
-                            - var displayComma = false
-                            each author, index in item.authors
-                                if author.authtype == "Author"
-                                    if displayComma == true
-                                        span ,&nbsp;
-                                    span= author.name
-                                    - displayComma = true
+                        - var authorList = item.authors.map(function(author){if(author.authtype == "Author") return author.name;}).join(', ');
+                        div(class="pm-list-row-authors" title=`${authorList}`)= authorList
                 div(class="list-view-pf-additional-info")
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-screen")
@@ -48,8 +42,10 @@ div(class='list-group-item')
             span PubMed Central:&nbsp;
             a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/articles/PMC${item.uid}`) #{item.uid}
             each articleid in item.articleids
-                if articleid.idtype == "pmid"
+                if (articleid.idtype == "pmid") && (articleid.value != 0)
                     span(style="padding-left: 10px") PubMed:&nbsp;
                     a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${articleid.value}`) #{articleid.value}
         //- Expansion Body gets replaced with content from an API call.
         div(class="expansion-body" id="expansionBody")
+            .spinner
+            .loading-text Loading
