@@ -29,7 +29,10 @@ let pubMedApi = {
 
         } else {
             // E-Search request
-            var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=PMC&term=${searchTerm}&retmode=json&usehistory=y${apiKey}`;
+            var db = "pubmed";
+            var filter = "Therapy/Broad[filter]";
+            var searchTermWithFilter = `(${filter}) AND (${searchTerm})`;
+            var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=${db}&term=${searchTermWithFilter}&retmode=json&usehistory=y${apiKey}`;
             httpRequest(searchUrl, {json: true}, (err, response, body) => {
                 if (err) {
                     return console.log(err);
@@ -40,24 +43,48 @@ let pubMedApi = {
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
 
-                // Build the e-summary url using the webenv and querykey.
+                // Build the e-link url using webenv and querykey.
+                // eLink url composition
+                //   dbfrom - database for the source ids
+                //   db - database for the target ids
+                //   linkname - link to retrieve (pubmed_pmc, pubmed_pmc_embargo, pubmed_pmc_local, pubmed_pmc_refs)
+                //   query_key - key to input ids from eHistory server
+                //   WebEnv - web environment for query_key
+                //   cmd=neighbor_history - store results on eHistory server
+                //   retmode=json - return as json
+                var dbfrom = "pubmed";
+                var db = "pmc";
+                var linkname = "pubmed_pmc";
                 var querykey = body.esearchresult.querykey;
                 var webenv = body.esearchresult.webenv;
-                var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=PMC&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=20${apiKey}`;
+                var linkUrl = `${eUtilsBaseUrl}elink.fcgi?db=${db}&dbfrom=${dbfrom}&linkname=${linkname}&query_key=${querykey}&WebEnv=${webenv}&cmd=neighbor_history&retmode=json${apiKey}`;
 
-                // E-Summary request
-                httpRequest(summaryUrl, {json: true}, (err, response, body) => {
+                // E-Link request
+                httpRequest(linkUrl, {json: true}, (err, response, body) => {
                     if (err) {
                         return console.log(err);
                     }
 
-                    // Add each returned item to the result object's item array
-                    body.result.uids.forEach( (element) => {
-                        results.items.push(body.result[element]);
-                    });
+                    // Build the e-summary url using the webenv and querykey.
+                    var db = "pubmed";
+                    var querykey = body.linksets[0].linksetdbhistories[0].querykey;
+                    var webenv = body.linksets[0].webenv;
+                    var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=100${apiKey}`;
 
-                    // signal the caller that the results are ready
-                    callback(results);
+                    // E-Summary request
+                    httpRequest(summaryUrl, {json: true}, (err, response, body) => {
+                        if (err) {
+                            return console.log(err);
+                        }
+
+                        // Add each returned item to the result object's item array
+                        body.result.uids.forEach( (element) => {
+                            results.items.push(body.result[element]);
+                        });
+
+                        // signal the caller that the results are ready
+                        callback(results);
+                    });
                 });
             });
         }
