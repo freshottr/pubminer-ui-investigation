@@ -12,28 +12,40 @@ div(class='list-group-item')
         div(class="list-view-pf-main-info")
             div(class="list-view-pf-body")
                 div(class="list-view-pf-description")
+
                     //- Hidden input field so we can retrieve a PMC id
                     input(type="hidden" id="uid" value=`${item.uid}`)
                     div(class="list-group-item-text")
+
                         //- Title
                         span
                             strong= item.title
+
                         //- Authors list, comma separated
                         - var authorList = item.authors.map(function(author){if(author.authtype == "Author") return author.name;}).join(', ');
                         div(class="pm-list-row-authors" title=`${authorList}`)= authorList
+
+                input(type="hidden" id="uid" value=`${item.uid}`)
                 div(class="list-view-pf-additional-info")
+
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-screen")
                         span Age 19-64
+
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-cluster")
-                        span Male 50%
+                        span 
+                            male=item.male_perc
+
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-container-node")
-                        span Female 50%
+                        span 
+                            female=item.female_perc
+
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-image")
                         span Race: Other
+
     //- Expansion section
     div(class="list-group-item-container container-fluid hidden")
         div(class="close")

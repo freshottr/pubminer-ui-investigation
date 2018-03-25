@@ -10,8 +10,4 @@ const client = new Client({
 
 client.connect()
 
-//sample query
-client.query('SELECT * FROM gender_race_v LIMIT 20', (err, res) => {
-  console.log(err, res)
-  client.end()
-})
+module.exports = client;
