@@ -11,7 +11,8 @@
 
  ### Instruction For Running PostgreSQL ###
  - [Install Docker Compose](https://docs.docker.com/compose/install/#install-compose)
- - Run `sudo docker up` from pubminer-ui-investigation directory
+ - Run `sudo docker-compose up` from pubminer-ui-investigation directory
+ - Install psql
  - To interact directly with db, run `psql -h localhost -p 5432 -d pubminer -U root_user --password root_pw`
 
 ### PubMed API key

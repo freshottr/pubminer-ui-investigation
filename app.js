@@ -5,6 +5,7 @@ var list = require('./routes/list');
 var results = require('./routes/results');
 var detail = require('./routes/detail');
 var app = express();
+//var db = require('./db')
 require('dotenv').config();
 
 app.set('views', './views');    // where to find the views

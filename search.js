@@ -2,6 +2,7 @@
 
 let httpRequest = require('request');
 let xmlSimple   = require('xml-simple');
+let psql = require('./db')
 
 // base url for all E-Utilities requests
 const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
@@ -79,7 +80,29 @@ let pubMedApi = {
 
                         // Add each returned item to the result object's item array
                         body.result.uids.forEach( (element) => {
-                            results.items.push(body.result[element]);
+
+                            //add demograhpic info to each element
+                            var item = body.result[element];
+
+                            //query for race/gender info
+                            q = 'select random() as male_perc, random() as female_perc from article limit 1;';
+
+                            //TODO: this variable assignment isn't working
+                            //TODO: split out query stuff into its own all-variable-inclusive function
+                            //storing all row results in array
+                            item.male_perc = .5;
+                            item.female_perc = .5;
+
+                            //query demographic info of each item uid and append to item
+                            psql.query(q, (err, res) => {
+                                item.male_perc = res.rows[0].male_perc;
+                                item.female_perc = res.rows[0].female_perc;
+
+                                console.log('Male Perc: ' + res.rows[0].male_perc + '   Female Perc: ' + res.rows[0].female_perc);
+                            })
+
+                            //add item to results object
+                            results.items.push(item);
                         });
 
                         // signal the caller that the results are ready
