@@ -5,9 +5,15 @@ const client = new Client({
   host: 'localhost',
   database: 'pubminer',
   password: 'root_pw',
-  port: 5432,
+  port: 5432
 })
 
-client.connect()
+client.connect( (err) => {
+    if (err) {
+      console.error('Postgres connection error', err.stack);
+    } else {
+      console.log('Postgres connected');
+    }
+});
 
 module.exports = client;

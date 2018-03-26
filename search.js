@@ -44,6 +44,12 @@ let pubMedApi = {
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
 
+                if (results.itemsFound == 0) {
+                    // signal the caller that the (empty) results are ready
+                    callback(results);
+                    return;
+                }
+
                 // Build the e-link url using webenv and querykey.
                 // eLink url composition
                 //   dbfrom - database for the source ids
@@ -70,7 +76,7 @@ let pubMedApi = {
                     var db = "pubmed";
                     var querykey = body.linksets[0].linksetdbhistories[0].querykey;
                     var webenv = body.linksets[0].webenv;
-                    var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=100${apiKey}`;
+                    var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=20${apiKey}`;
 
                     // E-Summary request
                     httpRequest(summaryUrl, {json: true}, (err, response, body) => {
@@ -79,10 +85,11 @@ let pubMedApi = {
                         }
 
                         // Add each returned item to the result object's item array
-                        body.result.uids.forEach( (element) => {
+                        // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
+                        // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
+                        var promises = body.result.uids.map(function(uid) {
 
-                            //add demograhpic info to each element
-                            var item = body.result[element];
+                            let item = body.result[uid];
 
                             //query for race/gender info
                             q = 'select random() as male_perc, random() as female_perc from article limit 1;';
@@ -94,19 +101,28 @@ let pubMedApi = {
                             item.female_perc = .5;
 
                             //query demographic info of each item uid and append to item
-                            psql.query(q, (err, res) => {
-                                item.male_perc = res.rows[0].male_perc;
-                                item.female_perc = res.rows[0].female_perc;
+                            return psql.query(q)
+                                .then((res) => {
+                                    item.male_perc = res.rows[0].male_perc;
+                                    item.female_perc = res.rows[0].female_perc;
 
-                                console.log('Male Perc: ' + res.rows[0].male_perc + '   Female Perc: ' + res.rows[0].female_perc);
-                            })
+                                    console.log('Male Perc: ' + res.rows[0].male_perc + '   Female Perc: ' + res.rows[0].female_perc);
 
-                            //add item to results object
-                            results.items.push(item);
+                                    return(item);
+                                }, (err) => {
+                                    console.error(err);
+                                });
                         });
 
-                        // signal the caller that the results are ready
-                        callback(results);
+                        // Process once all the promises have been resolved
+                        Promise.all(promises).then((qryPromises) => {
+                            qryPromises.forEach((item) =>{
+                                //add item to results object
+                                results.items.push(item);
+                            });
+                            // signal the caller that the results are ready
+                            callback(results);
+                        });
                     });
                 });
             });
