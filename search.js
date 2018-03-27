@@ -2,7 +2,11 @@
 
 let httpRequest = require('request');
 let xmlSimple   = require('xml-simple');
-let psql = require('./db')
+let psql = require('./db');
+let demoSvc = function() {
+    let DemographicsService  = require('./services/DemographicsService');
+    return new DemographicsService(psql);
+}();
 
 // base url for all E-Utilities requests
 const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
@@ -87,41 +91,25 @@ let pubMedApi = {
                         // Add each returned item to the result object's item array
                         // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
                         // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
-                        var promises = body.result.uids.map(function(uid) {
-
-                            let item = body.result[uid];
-
-                            //query for race/gender info
-                            q = 'select random() as male_perc, random() as female_perc from article limit 1;';
-
-                            //TODO: this variable assignment isn't working
-                            //TODO: split out query stuff into its own all-variable-inclusive function
-                            //storing all row results in array
-                            item.male_perc = .5;
-                            item.female_perc = .5;
-
-                            //query demographic info of each item uid and append to item
-                            return psql.query(q)
-                                .then((res) => {
-                                    item.male_perc = res.rows[0].male_perc;
-                                    item.female_perc = res.rows[0].female_perc;
-
-                                    console.log('Male Perc: ' + res.rows[0].male_perc + '   Female Perc: ' + res.rows[0].female_perc);
-
-                                    return(item);
-                                }, (err) => {
-                                    console.error(err);
-                                });
-                        });
+                        let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
 
                         // Process once all the promises have been resolved
-                        Promise.all(promises).then((qryPromises) => {
-                            qryPromises.forEach((item) =>{
-                                //add item to results object
-                                results.items.push(item);
-                            });
-                            // signal the caller that the results are ready
-                            callback(results);
+                        Promise.all(promises).then(
+                            (qryPromises) => {
+                                // console.log(`queryPromises ${qryPromises}`);
+                                qryPromises.forEach((dd) => {
+                                    console.log(`processing db query results: ${dd}`);
+                                    //add item to results object
+                                    let item = body.result[dd.pmid];
+                                    item.male_perc = dd.malePercent;
+                                    item.female_perc = dd.femalePercent;
+                                    results.items.push(item);
+                                });
+                                // signal the caller that the results are ready
+                                callback(results);
+                            },
+                            (err) => {
+                                console.error(err)
                         });
                     });
                 });
