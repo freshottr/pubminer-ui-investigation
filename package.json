@@ -24,6 +24,7 @@
     "pg": "^7.4.1",
     "pug": "^2.0.1",
     "request": "^2.85.0",
-    "xml-simple": "^0.0.1"
+    "xml-simple": "^0.0.1",
+    "request-promise": "4.2.2"
   }
 }

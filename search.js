@@ -48,7 +48,7 @@ let pubMedApi = {
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
 
-                if (results.itemsFound == 0) {
+                if (results.itemsFound === 0) {
                     // signal the caller that the (empty) results are ready
                     callback(results);
                     return;
