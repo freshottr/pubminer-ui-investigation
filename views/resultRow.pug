@@ -39,9 +39,9 @@ div(class='list-group-item')
     div(class="list-group-item-container container-fluid hidden")
         div(class="close")
             span(class="pficon pficon-close")
-        div
+        div(style="padding-bottom: 8px")
             if (item.pubdate) 
-                span(style="padding-left: 10px") Publication Date:
+                span Publication Date:
                     span(style="padding-left: 3px; font-weight: bold")= item.pubdate
             each articleid in item.articleids
                 if (articleid.idtype == "pmcid") && (articleid.value != 0)
