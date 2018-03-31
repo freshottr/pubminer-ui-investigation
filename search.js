@@ -48,7 +48,7 @@ let pubMedApi = {
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
 
-                if (results.itemsFound === 0) {
+                if (results.itemsFound === "0") {
                     // signal the caller that the (empty) results are ready
                     callback(results);
                     return;
@@ -76,45 +76,70 @@ let pubMedApi = {
                         return console.log(err);
                     }
 
-                    // Build the e-summary url using the webenv and querykey.
-                    var db = "pubmed";
-                    var querykey = body.linksets[0].linksetdbhistories[0].querykey;
-                    var webenv = body.linksets[0].webenv;
-                    var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retmax=20${apiKey}`;
+                    if (body.linksets[0].linksetdbhistories) {
+                        results.webenv = body.linksets[0].webenv;
+                        results.querykey = body.linksets[0].linksetdbhistories[0].querykey;
+                    } else {
+                        results.webenv = "";
+                        results.querykey = "";
+                    }
 
-                    // E-Summary request
-                    httpRequest(summaryUrl, {json: true}, (err, response, body) => {
-                        if (err) {
-                            return console.log(err);
-                        }
-
-                        // Add each returned item to the result object's item array
-                        // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
-                        // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
-                        let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
-
-                        // Process once all the promises have been resolved
-                        Promise.all(promises).then(
-                            (qryPromises) => {
-                                // console.log(`queryPromises ${qryPromises}`);
-                                qryPromises.forEach((dd) => {
-                                    console.log(`processing db query results: ${dd}`);
-                                    //add item to results object
-                                    let item = body.result[dd.pmid];
-                                    item.male_perc = dd.malePercent;
-                                    item.female_perc = dd.femalePercent;
-                                    results.items.push(item);
-                                });
-                                // signal the caller that the results are ready
-                                callback(results);
-                            },
-                            (err) => {
-                                console.error(err)
-                        });
-                    });
+                    callback(results);
                 });
             });
         }
+    },
+
+    getSummaries: function(webenv, querykey, start, max, callback) {
+
+        // setup the api key parameter if an api key is available.
+        let apiKey = '';
+        if (process.env.EUTILS_API_KEY) {
+            apiKey = `&api_key=${process.env.EUTILS_API_KEY}`
+        }
+
+        // Build the e-summary url using the webenv and querykey.
+        var db = "pubmed";
+        var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retstart=${start}&retmax=${max}${apiKey}`;
+
+        // E-Summary request
+        httpRequest(summaryUrl, {json: true}, (err, response, body) => {
+            if (err) {
+                return console.log(err);
+            }
+
+            var results = {items: []};
+
+            if (!body.result) {
+                // signal the caller that the (empty) results are ready
+                callback(results);
+                return;
+            }
+
+            // Add each returned item to the result object's item array
+            // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
+            // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
+            let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
+
+            // Process once all the promises have been resolved
+            Promise.all(promises).then(
+                (qryPromises) => {
+                    // console.log(`queryPromises ${qryPromises}`);
+                    qryPromises.forEach((dd) => {
+                        console.log(`processing db query results: ${dd}`);
+                        //add item to results object
+                        let item = body.result[dd.pmid];
+                        item.male_perc = dd.malePercent;
+                        item.female_perc = dd.femalePercent;
+                        results.items.push(item);
+                    });
+                    // signal the caller that the results are ready
+                    callback(results);
+                },
+                (err) => {
+                    console.error(err)
+            });
+        });
     },
 
     fetchResultDetail: function (pmcId, callback) {

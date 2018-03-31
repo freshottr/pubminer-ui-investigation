@@ -6,59 +6,17 @@
 extends layout.pug
 block scripts
     script(src="bower_components/jquery/dist/jquery.min.js")
-    script(type="text/javascript").
-        $(document).ready(function() {
-            // Row Checkbox Selection
-            $("input[type='checkbox']").change(function (e) {
-                if ($(this).is(":checked")) {
-                    $(this).closest('.list-group-item').addClass("active");
-                } else {
-                    $(this).closest('.list-group-item').removeClass("active");
-                }
-            });
-
-            // click the list-view heading then expand a row
-            $(".list-group-item-header").click(function(event){
-                if(!$(event.target).is("button, a, input, .fa-ellipsis-v")){
-                    $(this).find(".fa-angle-right").toggleClass("fa-angle-down")
-                    .end().parent().toggleClass("list-view-pf-expand-active")
-                    .find(".list-group-item-container").toggleClass("hidden");
-
-                    if($(this).find(".fa-angle-down").length > 0) {
-                        var eBody = $(this).closest("div.list-group-item").find("#expansionBody");
-                        // Get the content from back end
-                        $.get('/detail/' + $(this).find("#uid").val(), null, function(response) {
-                            if (response.error) {
-                                eBody.text(response.error);
-                            } else {
-                                eBody.html("");
-                                for (var key in response) {
-                                    if (response.hasOwnProperty(key)) {
-                                        eBody.append($("<strong>", {html: key}));
-                                        eBody.append(" " + response[key]);
-                                        eBody.append("<br/>")
-                                    }
-                                }
-                            }
-                        });
-                    }
-                } else {
-                }
-            })
-
-            // click the close button, hide the expand row and remove the active status
-            $(".list-group-item-container .close").on("click", function (){
-                $(this).parent().addClass("hidden")
-                .parent().removeClass("list-view-pf-expand-active")
-                .find(".fa-angle-right").removeClass("fa-angle-down");
-            })
-        });
+    script(src="scripts/pubminer.js")
 block content
     if results.items.length == 0
-        p(style='margin: 24px 0px 0px 20px; font-style: italic;') No results found for "#{results.searchTerm}"
+        p(style='margin: 24px 0px 0px 20px; font-style: italic;') No results found for "#{qryResult.searchTerm}"
     else
-        p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{results.itemsReturned} of #{results.itemsFound} results found for "#{results.searchTerm}"
+        p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{qryResult.itemsReturned} of #{qryResult.itemsFound} results found for "#{qryResult.searchTerm}"
+        input(type="hidden" id="webenv" value=qryResult.webenv)
+        input(type="hidden" id="querykey" value=qryResult.querykey)
+        input(type="hidden" id="nextRow" value=nextRow)
+        input(type="hidden" id="rowCount" value=rowCount)
         div(class='container-fluid')
-            div(class='list-group list-view-pf list-view-pf-view')
-                each item in results.items
-                    include resultRow
+            div(id="resultRows" class='list-group list-view-pf list-view-pf-view')
+                include resultRows
+        button(id="moreButton" class="btn btn-warning") Show More
