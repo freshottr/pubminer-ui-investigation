@@ -14,20 +14,9 @@ $.fn.addArrowClickHandler = function() {
             if($(this).find(".fa-angle-down").length > 0) {
                 let expansionBody = $(this).closest("div.list-group-item").find("div.expansion-body");
                 let uidValue = $(this).closest("div.list-group-item").find("input.uid").val();
-                // Get the content from back end
+                // Get the content from back end and append to the expansion area div
                 $.get('/detail/' + uidValue, null, function(response) {
-                    if (response.error) {
-                        expansionBody.text(response.error);
-                    } else {
-                        expansionBody.html("");
-                        for (var key in response) {
-                            if (response.hasOwnProperty(key)) {
-                                expansionBody.append($("<strong>", {html: key}));
-                                expansionBody.append(" " + response[key]);
-                                expansionBody.append("<br/>")
-                            }
-                        }
-                    }
+                    expansionBody.html(response);
                 });
             }
         } else {
