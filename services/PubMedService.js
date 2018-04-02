@@ -1,6 +1,6 @@
 "use strict";
 
-// TODO: remove this dependency
+// TODO: remove this dependency here once it is being injected elsewhere
 const http = require('request-promise');
 
 /**
