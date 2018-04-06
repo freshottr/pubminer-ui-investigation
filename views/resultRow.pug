@@ -28,12 +28,6 @@ div(class='list-group-item')
                     div(class="list-view-pf-additional-info-item")
                         span(class="pficon pficon-user")
                         span= (item.male_perc * 100).toFixed(0) + "% Male"  
-                    div(class="list-view-pf-additional-info-item")
-                        span(class="pficon pficon-user")
-                        span= (item.female_perc * 100).toFixed(0) + "% Female" 
-                    div(class="list-view-pf-additional-info-item")
-                        span(class="pficon pficon-image")
-                        span Race: Other
     //- Expansion section
     div(class="list-group-item-container container-fluid hidden")
         div(class="close")
@@ -43,10 +37,10 @@ div(class='list-group-item')
                 span(style="padding-right: 10px") Publication Date:
                     span(style="padding-left: 3px; font-weight: bold")= item.pubdate
             each articleid in item.articleids
-                if (articleid.idtype == "pmcid") && (articleid.value != 0)
+                if (articleid.idtype == "pmc") && (articleid.value != 0)
                     span(style="padding-right: 10px") PubMed Central:&nbsp;
                         a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/${articleid.value}`) #{articleid.value}
-                if (articleid.idtype == "pmid") && (articleid.value != 0)
+                if (articleid.idtype == "pubmed") && (articleid.value != 0)
                     span(style="padding-right: 10px") PubMed:&nbsp;
                         a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${articleid.value}`) #{articleid.value}
         //- Expansion Body gets replaced with content from an API call.
