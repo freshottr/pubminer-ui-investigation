@@ -9,9 +9,10 @@ $(document).ready(function() {
         dom: 't',
         language: {
             zeroRecords: "No records found"
+        },
+        initComplete: function() {
+            var rowCount = this.api().$('tbody tr').length;
+            $("#update-count").text(rowCount + " new articles added")
         }
     });
-
-    $('.datatable').dataTable();
-
 });

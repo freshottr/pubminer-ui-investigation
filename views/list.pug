@@ -11,19 +11,10 @@ block scripts
     script(src="bower_components/patternfly/dist/js/patternfly-functions-data-tables.js")
     script(src="scripts/wntable.js")
 block content
-    div(class="container-fluid")
-        div(class="row toolbar-pf")
-            div(class="col-sm-12")
-                form(class="toolbar-pf-actions" method='GET' action='/results')
-                    div(class="form-group toolbar-pf-filter")
-                        div(class="input-group")
-                            input(id="searchTerm" name="searchTerm" class="form-control" type="text" placeholder="Search Terms" style="width: 400px")
-                    div(class="form-group toolbar-pf-find")
-                        button(class="btn btn-link btn-find" type="submit")
-                            span(class="fa fa-search")
     div(style="text-align: center")
         h2 What's New in Our Database
-        h3 Last update 2/28/2018
+        h3 Last update 4/4/2018 
+        h4(id="update-count")
     table(class="table table-striped table-border table-hover" id="table1")
         thead
             tr

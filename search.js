@@ -1,5 +1,4 @@
 // search.js
-
 let httpRequest = require('request');
 let xmlSimple   = require('xml-simple');
 let psql = require('./db');
@@ -35,7 +34,7 @@ let pubMedApi = {
         } else {
             // E-Search request
             var db = "pubmed";
-            var filter = "Therapy/Broad[filter]";
+            var filter = "((randomized+controlled+trial[pt])+OR+(controlled+clinical+trial[pt])+OR+(randomized[tiab]+OR+randomised[tiab])+OR+(placebo[tiab])+OR+(drug+therapy[sh])+OR+(randomly[tiab])+OR+(trial[tiab])+OR+(groups[tiab]))+NOT+(animals[mh]+NOT+humans[mh])";
             var searchTermWithFilter = `(${filter}) AND (${searchTerm})`;
             var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=${db}&term=${searchTermWithFilter}&retmode=json&usehistory=y${apiKey}`;
             httpRequest(searchUrl, {json: true}, (err, response, body) => {
@@ -47,45 +46,11 @@ let pubMedApi = {
                 results.searchTerm = searchTerm;
                 results.itemsFound = body.esearchresult.count;
                 results.itemsReturned = body.esearchresult.retmax;
+                results.webenv = body.esearchresult.webenv;
+                results.querykey = body.esearchresult.querykey;
 
-                if (results.itemsFound === "0") {
-                    // signal the caller that the (empty) results are ready
-                    callback(results);
-                    return;
-                }
-
-                // Build the e-link url using webenv and querykey.
-                // eLink url composition
-                //   dbfrom - database for the source ids
-                //   db - database for the target ids
-                //   linkname - link to retrieve (pubmed_pmc, pubmed_pmc_embargo, pubmed_pmc_local, pubmed_pmc_refs)
-                //   query_key - key to input ids from eHistory server
-                //   WebEnv - web environment for query_key
-                //   cmd=neighbor_history - store results on eHistory server
-                //   retmode=json - return as json
-                var dbfrom = "pubmed";
-                var db = "pmc";
-                var linkname = "pubmed_pmc";
-                var querykey = body.esearchresult.querykey;
-                var webenv = body.esearchresult.webenv;
-                var linkUrl = `${eUtilsBaseUrl}elink.fcgi?db=${db}&dbfrom=${dbfrom}&linkname=${linkname}&query_key=${querykey}&WebEnv=${webenv}&cmd=neighbor_history&retmode=json${apiKey}`;
-
-                // E-Link request
-                httpRequest(linkUrl, {json: true}, (err, response, body) => {
-                    if (err) {
-                        return console.log(err);
-                    }
-
-                    if (body.linksets[0].linksetdbhistories) {
-                        results.webenv = body.linksets[0].webenv;
-                        results.querykey = body.linksets[0].linksetdbhistories[0].querykey;
-                    } else {
-                        results.webenv = "";
-                        results.querykey = "";
-                    }
-
-                    callback(results);
-                });
+                // signal the caller that the results are ready
+                callback(results);
             });
         }
     },
@@ -142,15 +107,15 @@ let pubMedApi = {
         });
     },
 
-    fetchResultDetail: function (pmcId, callback) {
-        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pmc&id=${pmcId}&retmode=xml`;
-        console.log(`fetching details for ${pmcId} at ${uri}`);
+    fetchResultDetail: function (pmId, callback) {
+        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pubmed&id=${pmId}&retmode=xml`;
+        console.log(`fetching details for ${pmId} at ${uri}`);
         httpRequest(uri, null, (err, response, body) => {
 
             let result = {};
 
             if (err) {
-                console.log(`error fetching details for ${pmcId}`, err);
+                console.log(`error fetching details for ${pmId}`, err);
                 result.error = "failed to get publication details";
                 return;
             }
@@ -166,46 +131,28 @@ let pubMedApi = {
                 }
 
                 try {
+
                     let abstract = parsed
-                        .article
-                        .front
-                        ['article-meta']
-                        .abstract;
+                         .PubmedArticle
+                         .MedlineCitation
+                         .Article
+                         .Abstract
+                         .AbstractText;
 
-                    if (!abstract) {
-                        result = errorOf("article does not contain an abstract");
-                        return;
-                    }
-
-                    // check for sections
-                    if (Array.isArray(abstract.sec)) {
-                        abstract
-                            .sec
-                            .forEach(s => {
-                                console.log(`${s.title.toLowerCase()} ${s.p['#']}`);
-                                result[s.title.toLowerCase()] = s.p["#"];
-                            });
-
-                    // check for a paragraph (ex. PMC 5858162)
-                    } else if (abstract.p) {
-                        console.log(`extracting paragraph ${abstract.p}`);
-                        result.abstract = abstract.p['#'];
+                    // The abstract can be an array of sections...
+                    if (Array.isArray(abstract)) {
+                         abstract.forEach((abstractTxt) => {
+                             console.log(abstractTxt['@'].Label); // the abstract type
+                             console.log(abstractTxt['#']); // the abstract's text
+                             result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
+                         });
+                    // ... or an object
+                    } else if (abstract && typeof abstract == 'object'){
+                        result["abstract"] = abstract['#'];
+                    // ... or plain text
                     } else {
-                        result = errorOf(`unexpected abstract format '${abstract}'`);
+                        result["abstract"] = abstract;
                     }
-
-
-                    // parsed
-                    //     .PubmedArticle
-                    //     .MedlineCitation
-                    //     .Article
-                    //     .Abstract
-                    //     .AbstractText
-                    //     .forEach((abstractTxt) => {
-                    //         console.log(abstractTxt['@'].Label); // the abstract type
-                    //         console.log(abstractTxt['#']); // the abstract's text
-                    //         result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
-                    //     });
                 }
                 catch(e) {
                     console.log(`error extracting the abstract's text from the document ${e}`);
