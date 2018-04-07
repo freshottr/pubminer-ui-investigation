@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node ./bin/www",
     "start-dev": "nodemon --inspect ./bin/www",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "mocha",
     "cypress:open": "cypress open"
   },
   "contributors": [
@@ -17,6 +17,7 @@
   "license": "ISC",
   "dependencies": {
     "bower": "^1.8.2",
+    "config": "^1.30.0",
     "dotenv": "^5.0.1",
     "express": "^4.16.3",
     "gulp": "^3.9.1",
@@ -25,11 +26,12 @@
     "pg": "^7.4.1",
     "pug": "^2.0.1",
     "request": "^2.85.0",
-    "xml-simple": "^0.0.1",
-    "request-promise": "4.2.2"
+    "request-promise": "4.2.2",
+    "xml-simple": "^0.0.1"
   },
-
   "devDependencies": {
-    "cypress": "^2.1.0"
+    "cypress": "^2.1.0",
+    "mocha": "^5.0.5",
+    "nock": "^9.2.3"
   }
 }

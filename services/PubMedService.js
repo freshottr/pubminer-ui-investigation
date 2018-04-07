@@ -17,9 +17,6 @@ class PubMedService {
     constructor(client, config) {
         this.client = http; ///client;
         this.config = config;
-        this.config.queryFilter = "Therapy/Broad[filter]"; //TODO: move this to config
-        this.searchUri = `${config.eUtilsBaseUri}/esearch.fcgi`;
-        this.linkUri = `${config.eUtilsBaseri}/elink.fcgi`;
     }
 
     /**
@@ -33,12 +30,12 @@ class PubMedService {
      */
     search(options, query) {
         const searchOptions = {
-            uri: this.searchUri,
+            uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
             qs: {
                 // TODO: use the API key in the query parameters
                 db: this.config.db,
-                term: `${query} AND ${this.config.queryFilter}`,
+                term: `(${query}) AND (${this.config.searchFilter})`,
                 retmode: "json",
                 usehistory: "y",
             }
@@ -64,33 +61,10 @@ class PubMedService {
                     }
                 };
             })
-            // E-link
-            .then(searchResult => {
-                const linkOptions = {
-                    uri: this.linkUri,
-                    json: true,
-                    qs: {
-                        db: "pmc",
-                        retmode: "json",
-                        cmd: "neighbor_history",
-                        dbfrom: this.config.db,
-                        linkname: "pubmed_pmc",
-                        querykey: searchResult.environment.querykey,
-                        webenv: searchResult.environment.webenv
-                    }
-                };
-                return this.client(linkOptions)
-                    .then(linkResult => {
-                        // Update the querykey and webenv with updated valude from E-link
-                        searchResult.webenv = linkResult.linksets[0].webenv;
-                        searchResult.querykey = linkResult.linksets[0].linksetdbhistories[0].querykey;
-                        return searchResult;
-                    })
-            })
             .catch(err => {
                 console.error(`unexpected error executing PubMed Search or Link for ${query}`, err);
                 return {
-                    error: `Unexpected error executing PubMed Search or Link`
+                    error: `Unexpected error executing PubMed Search for ${query}`
                 };
             });
     }
@@ -101,7 +75,7 @@ class PubMedService {
      * @return the summary for the article
      */
     fetchSummary(options) {
-
+        return null;
     }
 
     /**
@@ -126,3 +100,5 @@ class PubMedService {
         return this(client, config);
     }
 }
+
+module.exports = PubMedService;

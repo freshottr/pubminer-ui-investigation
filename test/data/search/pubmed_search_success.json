@@ -1,0 +1,194 @@
+{
+  "header": {
+    "type": "esearch",
+    "version": "0.3"
+  },
+  "esearchresult": {
+    "count": "1469",
+    "retmax": "20",
+    "retstart": "0",
+    "querykey": "1",
+    "webenv": "NCID_1_41963603_130.14.18.34_9001_1523130080_1791019099_0MetA0_S_MegaStore",
+    "idlist": [
+      "29603827",
+      "29489680",
+      "29390338",
+      "29357841",
+      "29356096",
+      "29326294",
+      "29320054",
+      "29269696",
+      "29267924",
+      "29267911",
+      "29267456",
+      "29245299",
+      "29202623",
+      "29193554",
+      "29112586",
+      "29095548",
+      "29028178",
+      "28991722",
+      "28976850",
+      "28975040"
+    ],
+    "translationset": [
+      {
+        "from": "guillain barre syndrome",
+        "to": "\"guillain-barre syndrome\"[MeSH Terms] OR (\"guillain-barre\"[All Fields] AND \"syndrome\"[All Fields]) OR \"guillain-barre syndrome\"[All Fields] OR (\"guillain\"[All Fields] AND \"barre\"[All Fields] AND \"syndrome\"[All Fields]) OR \"guillain barre syndrome\"[All Fields]"
+      },
+      {
+        "from": "drug therapy[sh]",
+        "to": "\"drug therapy\"[Subheading]"
+      },
+      {
+        "from": "animals[mh]",
+        "to": "\"animals\"[MeSH Terms]"
+      },
+      {
+        "from": "humans[mh]",
+        "to": "\"humans\"[MeSH Terms]"
+      }
+    ],
+    "translationstack": [
+      {
+        "term": "\"guillain-barre syndrome\"[MeSH Terms]",
+        "field": "MeSH Terms",
+        "count": "4447",
+        "explode": "Y"
+      },
+      {
+        "term": "\"guillain-barre\"[All Fields]",
+        "field": "All Fields",
+        "count": "9065",
+        "explode": "N"
+      },
+      {
+        "term": "\"syndrome\"[All Fields]",
+        "field": "All Fields",
+        "count": "1066274",
+        "explode": "N"
+      },
+      "AND",
+      "GROUP",
+      "OR",
+      {
+        "term": "\"guillain-barre syndrome\"[All Fields]",
+        "field": "All Fields",
+        "count": "8727",
+        "explode": "N"
+      },
+      "OR",
+      {
+        "term": "\"guillain\"[All Fields]",
+        "field": "All Fields",
+        "count": "9331",
+        "explode": "N"
+      },
+      {
+        "term": "\"barre\"[All Fields]",
+        "field": "All Fields",
+        "count": "11161",
+        "explode": "N"
+      },
+      "AND",
+      {
+        "term": "\"syndrome\"[All Fields]",
+        "field": "All Fields",
+        "count": "1066274",
+        "explode": "N"
+      },
+      "AND",
+      "GROUP",
+      "OR",
+      {
+        "term": "\"guillain barre syndrome\"[All Fields]",
+        "field": "All Fields",
+        "count": "8727",
+        "explode": "N"
+      },
+      "OR",
+      "GROUP",
+      {
+        "term": "randomized controlled trial[pt]",
+        "field": "pt",
+        "count": "457553",
+        "explode": "Y"
+      },
+      {
+        "term": "controlled clinical trial[pt]",
+        "field": "pt",
+        "count": "545005",
+        "explode": "Y"
+      },
+      "OR",
+      {
+        "term": "randomized[tiab]",
+        "field": "tiab",
+        "count": "438872",
+        "explode": "N"
+      },
+      {
+        "term": "randomised[tiab]",
+        "field": "tiab",
+        "count": "88035",
+        "explode": "N"
+      },
+      "OR",
+      "GROUP",
+      "OR",
+      {
+        "term": "placebo[tiab]",
+        "field": "tiab",
+        "count": "192700",
+        "explode": "N"
+      },
+      "OR",
+      {
+        "term": "\"drug therapy\"[Subheading]",
+        "field": "Subheading",
+        "count": "2005762",
+        "explode": "Y"
+      },
+      "OR",
+      {
+        "term": "randomly[tiab]",
+        "field": "tiab",
+        "count": "288237",
+        "explode": "N"
+      },
+      "OR",
+      {
+        "term": "trial[tiab]",
+        "field": "tiab",
+        "count": "500412",
+        "explode": "N"
+      },
+      "OR",
+      {
+        "term": "groups[tiab]",
+        "field": "tiab",
+        "count": "1805593",
+        "explode": "N"
+      },
+      "OR",
+      "GROUP",
+      "AND",
+      {
+        "term": "\"animals\"[MeSH Terms]",
+        "field": "MeSH Terms",
+        "count": "21422923",
+        "explode": "Y"
+      },
+      {
+        "term": "\"humans\"[MeSH Terms]",
+        "field": "MeSH Terms",
+        "count": "16982228",
+        "explode": "Y"
+      },
+      "NOT",
+      "GROUP",
+      "NOT"
+    ],
+    "querytranslation": "(\"guillain-barre syndrome\"[MeSH Terms] OR (\"guillain-barre\"[All Fields] AND \"syndrome\"[All Fields]) OR \"guillain-barre syndrome\"[All Fields] OR (\"guillain\"[All Fields] AND \"barre\"[All Fields] AND \"syndrome\"[All Fields]) OR \"guillain barre syndrome\"[All Fields]) AND (randomized controlled trial[pt] OR controlled clinical trial[pt] OR (randomized[tiab] OR randomised[tiab]) OR placebo[tiab] OR \"drug therapy\"[Subheading] OR randomly[tiab] OR trial[tiab] OR groups[tiab]) NOT (\"animals\"[MeSH Terms] NOT \"humans\"[MeSH Terms])"
+  }
+}
