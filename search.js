@@ -1,8 +1,8 @@
 // search.js
 let httpRequest = require('request');
 let xmlSimple   = require('xml-simple');
-let psql = require('./db');
 let demoSvc = function() {
+    let psql = require('./db');
     let DemographicsService  = require('./services/DemographicsService');
     return new DemographicsService(psql);
 }();
