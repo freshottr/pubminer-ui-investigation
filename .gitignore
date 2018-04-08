@@ -5,3 +5,4 @@ nohup.out
 node_modules/
 bower_components/
 public/css/
+config/local*.json
