@@ -2,16 +2,42 @@
    layout.pug
 
 doctype html
-html(lang="en")
+html(lang="en" class="layout-pf layout-pf-fixed")
     head
         title PubMiner
         meta(charset="utf-8")
         link(rel='stylesheet' href='css/pmstyles.css')
+        script(src="bower_components/jquery/dist/jquery.min.js")
+        script(src="bower_components/patternfly/dist/js/patternfly.min.js")
+        script(src="bower_components/bootstrap/dist/js/bootstrap.min.js")
         block scripts
     body
         nav(class="navbar navbar-pf-vertical")
             div(class="navbar-header")
-                a(href="/" class="navbar-brand") P u b M i n e r
+                a(href="/" class="navbar-brand")
+                    img(class="navbar-brand-icon" src="images/PubMinerLogo.svg" alt="PubMiner")
+                    img(class="navbar-brand-name" src="images/PubMinerText.svg" alt="Demographic enriched PubMed search")
+            nav(class="collapse navbar-collapse")
+                ul(class="nav navbar-nav navbar-right navbar-iconic navbar-utility")
+                    li(class="applauncher-pf  dropdown dropdown-kebab-pf")
+                        a(class="dropdown-toggle nav-item-iconic" data-toggle="dropdown" href="#")
+                            i(class="fa fa-th applauncher-pf-icon" aria-hidden="true")
+                            span(class="applauncher-pf-title") Application Launcher
+                                span(class="caret" aria-hidden="true")
+                        ul(class="dropdown-menu dropdown-menu-right" role="menu")
+                            li(class="applauncher-pf-item" role="menuitem")
+                                a(class="applauncher-pf-link" href="#" id="exportMenuItem")
+                                    i(class="applauncher-pf-link-icon pficon pficon-export" aria-hidden="true")
+                                    span(class="applauncher-pf-link-title") Export
+                    li(class="dropdown")
+                        a(href="#0" class="dropdown-toggle nav-item-iconic" id="helpDropdown" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true")
+                            span(title="Help" class="fa pficon-help")
+                            span(class="caret")
+                        ul(class="dropdown-menu" aria-labelledby="helpDropdown")
+                            li
+                                a(href="#0") Help
+                            li
+                                a(href="#0") About
         div(class="container-fluid")
             div(class="row toolbar-pf")
                 div(class="col-sm-12")

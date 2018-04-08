@@ -48,6 +48,18 @@ $.fn.addRowCheckboxHandler = function() {
 
 $(document).ready(function() {
 
+    // Click handler for Export button
+    $("#exportMenuItem").click(function(){
+        var idsToExport = Array();
+        $("input.uid:checked").each(function(){
+            idsToExport.push($(this).val());
+        });
+        if (idsToExport.length > 0) {
+            var data = {ids: idsToExport};
+            $.ajax({"url": "results/export", "method": "POST", "data": data});
+        }
+    });
+
     // the next three function calls add handlers to the rows initially displayed.
 
     // row checkbox selection
