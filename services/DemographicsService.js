@@ -22,26 +22,15 @@ class DemographicsService {
     getDemographicDetailsForIds(ids) {
 
         let demoQueryForId = (id) => {
-            //TODO: this query is fake aside from connecting to the database. make it real
-            let q = `select ${id} as pmid, random() as male_perc, random() as female_perc from article limit 1;`;
-            return this
-                .session
-                .query(q)
-                .then( res => {
-                    let row = res.rows[0];
-                    let demoDetails = {
-                        pmid: row.pmid,
-                        malePercent: row.male_perc,
-                        femalePercent: row.female_perc
-                    };
 
-                    console.log(`pmid: ${demoDetails.pmid} , male %: ${demoDetails.malePercent},` +
-                        `female %: ${demoDetails.femalePercent}`);
-                    return demoDetails;
-                }, (err) => {
-                    console.error(err);
-                    reject(err);
+            // TODO: replace with dynamoDB query
+            return new Promise((resolve, reject) => {
+                resolve({
+                    pmid: id,
+                    malePercent: 50,
+                    femalePercent: 50
                 });
+            });
         };
 
         return ids.map(demoQueryForId);

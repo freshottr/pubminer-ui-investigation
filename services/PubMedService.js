@@ -41,8 +41,6 @@ class PubMedService {
             }
         };
 
-        // DESNOTE(ismith, 2018-03-29): consider not calling the e-link API if we have 0 search results. This may only
-        // be worthwhile if we feel that searches with 0 results will be a common occurrence
         return this
             // E-search
             .client(searchOptions)
@@ -74,8 +72,29 @@ class PubMedService {
      * @param options
      * @return the summary for the article
      */
-    fetchSummary(options) {
-        return null;
+    fetchSummary(environment, options) {
+        const summaryOptions = {
+            uri: `${this.config.baseUri}${this.config.summaryPath}`,
+            json: true,
+            qs: {
+                // TODO: use the API key in the query parameters
+                db: this.config.db,
+                WebEnv: environment.webenv,
+                query_key: environment.querykey,
+                retstart: options.start,
+                retmax: options.max,
+                retmode: "json"
+            }
+        };
+
+        return this
+            .client(summaryOptions)
+            .catch(err => {
+                console.error(`error (${err}) performing eSummary for ${JSON.stringify(summaryOptions)}`);
+                return {
+                    error: "Unexpected error executing PubMed Summary request"
+                };
+            });
     }
 
     /**
@@ -97,7 +116,7 @@ class PubMedService {
      * @return a new `PubMedService`
      */
     static create(client, config){
-        return this(client, config);
+        return new this(client, config);
     }
 }
 
