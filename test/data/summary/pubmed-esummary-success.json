@@ -1,0 +1,418 @@
+{
+  "header": {
+    "type": "esummary",
+    "version": "0.3"
+  },
+  "result": {
+    "uids": [
+      "29603827",
+      "29489680",
+      "29390338"
+    ],
+    "29603827": {
+      "uid": "29603827",
+      "pubdate": "2018 Mar 30",
+      "epubdate": "2018 Mar 30",
+      "source": "J Peripher Nerv Syst",
+      "authors": [
+        {
+          "name": "Alessandro L",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Pastor Rueda JM",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Wilken M",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Querol Gutiérrez LA",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Marrodán M",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Acosta JN",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Rivero A",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Barroso F",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Farez MF",
+          "authtype": "Author",
+          "clusterid": ""
+        }
+      ],
+      "lastauthor": "Farez MF",
+      "title": "Differences between Acute-onset Chronic Inflammatory Demyelinating Polyneuropathy (A-CIDP) and Acute Inflammatory Demyelinating Polyneuropathy (AIDP) in adult patients.",
+      "sorttitle": "differences between acute onset chronic inflammatory demyelinating polyneuropathy a cidp and acute inflammatory demyelinating polyneuropathy aidp in adult patients",
+      "volume": "",
+      "issue": "",
+      "pages": "",
+      "lang": [
+        "eng"
+      ],
+      "nlmuniqueid": "9704532",
+      "issn": "1085-9489",
+      "essn": "1529-8027",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "recordstatus": "PubMed - as supplied by publisher",
+      "pubstatus": "10",
+      "articleids": [
+        {
+          "idtype": "pubmed",
+          "idtypen": 1,
+          "value": "29603827"
+        },
+        {
+          "idtype": "doi",
+          "idtypen": 3,
+          "value": "10.1111/jns.12266"
+        },
+        {
+          "idtype": "rid",
+          "idtypen": 8,
+          "value": "29603827"
+        },
+        {
+          "idtype": "eid",
+          "idtypen": 8,
+          "value": "29603827"
+        }
+      ],
+      "history": [
+        {
+          "pubstatus": "received",
+          "date": "2018/01/17 00:00"
+        },
+        {
+          "pubstatus": "revised",
+          "date": "2018/03/23 00:00"
+        },
+        {
+          "pubstatus": "accepted",
+          "date": "2018/03/26 00:00"
+        },
+        {
+          "pubstatus": "entrez",
+          "date": "2018/04/01 06:00"
+        },
+        {
+          "pubstatus": "pubmed",
+          "date": "2018/04/01 06:00"
+        },
+        {
+          "pubstatus": "medline",
+          "date": "2018/04/01 06:00"
+        }
+      ],
+      "references": [
+      ],
+      "attributes": [
+        "Has Abstract"
+      ],
+      "pmcrefcount": "",
+      "fulljournalname": "Journal of the peripheral nervous system : JPNS",
+      "elocationid": "doi: 10.1111/jns.12266",
+      "doctype": "citation",
+      "srccontriblist": [
+      ],
+      "booktitle": "",
+      "medium": "",
+      "edition": "",
+      "publisherlocation": "",
+      "publishername": "",
+      "srcdate": "",
+      "reportnumber": "",
+      "availablefromurl": "",
+      "locationlabel": "",
+      "doccontriblist": [
+      ],
+      "docdate": "",
+      "bookname": "",
+      "chapter": "",
+      "sortpubdate": "2018/03/30 00:00",
+      "sortfirstauthor": "Alessandro L",
+      "vernaculartitle": ""
+    },
+    "29489680": {
+      "uid": "29489680",
+      "pubdate": "2018 Mar",
+      "epubdate": "",
+      "source": "Medicine (Baltimore)",
+      "authors": [
+        {
+          "name": "Jing C",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Wang Z",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Chu C",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Dong M",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Lin W",
+          "authtype": "Author",
+          "clusterid": ""
+        }
+      ],
+      "lastauthor": "Lin W",
+      "title": "Miller-Fisher syndrome complicated by Bickerstaff brainstem encephalitis: A case report.",
+      "sorttitle": "miller fisher syndrome complicated by bickerstaff brainstem encephalitis a case report",
+      "volume": "97",
+      "issue": "9",
+      "pages": "e9824",
+      "lang": [
+        "eng"
+      ],
+      "nlmuniqueid": "2985248R",
+      "issn": "0025-7974",
+      "essn": "1536-5964",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "recordstatus": "PubMed - indexed for MEDLINE",
+      "pubstatus": "4",
+      "articleids": [
+        {
+          "idtype": "pubmed",
+          "idtypen": 1,
+          "value": "29489680"
+        },
+        {
+          "idtype": "doi",
+          "idtypen": 3,
+          "value": "10.1097/MD.0000000000009824"
+        },
+        {
+          "idtype": "pii",
+          "idtypen": 4,
+          "value": "00005792-201803020-00041"
+        },
+        {
+          "idtype": "pmc",
+          "idtypen": 8,
+          "value": "PMC5851734"
+        },
+        {
+          "idtype": "rid",
+          "idtypen": 8,
+          "value": "29489680"
+        },
+        {
+          "idtype": "eid",
+          "idtypen": 8,
+          "value": "29489680"
+        },
+        {
+          "idtype": "pmcid",
+          "idtypen": 5,
+          "value": "pmc-id: PMC5851734;"
+        }
+      ],
+      "history": [
+        {
+          "pubstatus": "entrez",
+          "date": "2018/03/01 06:00"
+        },
+        {
+          "pubstatus": "pubmed",
+          "date": "2018/03/01 06:00"
+        },
+        {
+          "pubstatus": "medline",
+          "date": "2018/03/14 06:00"
+        }
+      ],
+      "references": [
+      ],
+      "attributes": [
+        "Has Abstract"
+      ],
+      "pmcrefcount": "",
+      "fulljournalname": "Medicine",
+      "elocationid": "doi: 10.1097/MD.0000000000009824",
+      "doctype": "citation",
+      "srccontriblist": [
+      ],
+      "booktitle": "",
+      "medium": "",
+      "edition": "",
+      "publisherlocation": "",
+      "publishername": "",
+      "srcdate": "",
+      "reportnumber": "",
+      "availablefromurl": "",
+      "locationlabel": "",
+      "doccontriblist": [
+      ],
+      "docdate": "",
+      "bookname": "",
+      "chapter": "",
+      "sortpubdate": "2018/03/01 00:00",
+      "sortfirstauthor": "Jing C",
+      "vernaculartitle": ""
+    },
+    "29390338": {
+      "uid": "29390338",
+      "pubdate": "2017 Dec",
+      "epubdate": "",
+      "source": "Medicine (Baltimore)",
+      "authors": [
+        {
+          "name": "Han J",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Ji Y",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Cao D",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Kang Z",
+          "authtype": "Author",
+          "clusterid": ""
+        },
+        {
+          "name": "Zhu J",
+          "authtype": "Author",
+          "clusterid": ""
+        }
+      ],
+      "lastauthor": "Zhu J",
+      "title": "Miller Fisher syndrome with acute angle-closure glaucoma as the first manifestation: A case report.",
+      "sorttitle": "miller fisher syndrome with acute angle closure glaucoma as the first manifestation a case report",
+      "volume": "96",
+      "issue": "50",
+      "pages": "e9201",
+      "lang": [
+        "eng"
+      ],
+      "nlmuniqueid": "2985248R",
+      "issn": "0025-7974",
+      "essn": "1536-5964",
+      "pubtype": [
+        "Journal Article"
+      ],
+      "recordstatus": "PubMed - indexed for MEDLINE",
+      "pubstatus": "4",
+      "articleids": [
+        {
+          "idtype": "pubmed",
+          "idtypen": 1,
+          "value": "29390338"
+        },
+        {
+          "idtype": "doi",
+          "idtypen": 3,
+          "value": "10.1097/MD.0000000000009201"
+        },
+        {
+          "idtype": "pii",
+          "idtypen": 4,
+          "value": "00005792-201712150-00088"
+        },
+        {
+          "idtype": "pmc",
+          "idtypen": 8,
+          "value": "PMC5815750"
+        },
+        {
+          "idtype": "rid",
+          "idtypen": 8,
+          "value": "29390338"
+        },
+        {
+          "idtype": "eid",
+          "idtypen": 8,
+          "value": "29390338"
+        },
+        {
+          "idtype": "pmcid",
+          "idtypen": 5,
+          "value": "pmc-id: PMC5815750;"
+        }
+      ],
+      "history": [
+        {
+          "pubstatus": "entrez",
+          "date": "2018/02/03 06:00"
+        },
+        {
+          "pubstatus": "pubmed",
+          "date": "2018/02/03 06:00"
+        },
+        {
+          "pubstatus": "medline",
+          "date": "2018/02/13 06:00"
+        }
+      ],
+      "references": [
+      ],
+      "attributes": [
+        "Has Abstract"
+      ],
+      "pmcrefcount": "",
+      "fulljournalname": "Medicine",
+      "elocationid": "doi: 10.1097/MD.0000000000009201",
+      "doctype": "citation",
+      "srccontriblist": [
+      ],
+      "booktitle": "",
+      "medium": "",
+      "edition": "",
+      "publisherlocation": "",
+      "publishername": "",
+      "srcdate": "",
+      "reportnumber": "",
+      "availablefromurl": "",
+      "locationlabel": "",
+      "doccontriblist": [
+      ],
+      "docdate": "",
+      "bookname": "",
+      "chapter": "",
+      "sortpubdate": "2017/12/01 00:00",
+      "sortfirstauthor": "Han J",
+      "vernaculartitle": ""
+    }
+  }
+}
+

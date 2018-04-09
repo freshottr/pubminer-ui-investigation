@@ -6,6 +6,8 @@ let demoSvc = function() {
     let DemographicsService  = require('./services/DemographicsService');
     return new DemographicsService(psql);
 }();
+const config = require('config').get('PubMedService');
+const pmSvc = require('./services/PubMedService').create(null, config);
 
 // base url for all E-Utilities requests
 const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
@@ -68,43 +70,76 @@ let pubMedApi = {
         var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retstart=${start}&retmax=${max}${apiKey}`;
 
         // E-Summary request
-        httpRequest(summaryUrl, {json: true}, (err, response, body) => {
-            if (err) {
-                return console.log(err);
-            }
+        const environment = {
+            webenv: webenv,
+            querykey: querykey
+        };
 
-            var results = {items: []};
+        const options = {
+            max: max,
+            start: start
+        };
 
-            if (!body.result) {
-                // signal the caller that the (empty) results are ready
-                callback(results);
-                return;
-            }
+        let results = {
+            items: []
+        };
 
-            // Add each returned item to the result object's item array
-            // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
-            // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
-            let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
-
-            // Process once all the promises have been resolved
-            Promise.all(promises).then(
-                (qryPromises) => {
-                    // console.log(`queryPromises ${qryPromises}`);
-                    qryPromises.forEach((dd) => {
-                        console.log(`processing db query results: ${dd}`);
-                        //add item to results object
-                        let item = body.result[dd.pmid];
-                        item.male_perc = dd.malePercent;
-                        item.female_perc = dd.femalePercent;
-                        results.items.push(item);
-                    });
-                    // signal the caller that the results are ready
-                    callback(results);
-                },
-                (err) => {
-                    console.error(err)
+        pmSvc.fetchSummary(environment, options)
+            .then(summaryResults => {
+                Promise
+                    .all(demoSvc
+                        .getDemographicDetailsForIds(summaryResults.result.uids))
+                    .then(demoDetails => {
+                        demoDetails.forEach(dd => {
+                            console.log(`processing db query results: ${dd}`);
+                            //add item to results object
+                            let item = summaryResults.result[dd.pmid];
+                            item.male_perc = dd.malePercent;
+                            item.female_perc = dd.femalePercent;
+                            results.items.push(item);
+                        });
+                        return results;
+                    })
+                    .then(mergedData => callback(mergedData))
             });
-        });
+
+        // httpRequest(summaryUrl, {json: true}, (err, response, body) => {
+        //     if (err) {
+        //         return console.log(err);
+        //     }
+        //
+        //     var results = {items: []};
+        //
+        //     if (!body.result) {
+        //         // signal the caller that the (empty) results are ready
+        //         callback(results);
+        //         return;
+        //     }
+        //
+        //     // Add each returned item to the result object's item array
+        //     // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
+        //     // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
+        //     let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
+        //
+        //     // Process once all the promises have been resolved
+        //     Promise.all(promises).then(
+        //         (qryPromises) => {
+        //             // console.log(`queryPromises ${qryPromises}`);
+        //             qryPromises.forEach((dd) => {
+        //                 console.log(`processing db query results: ${dd}`);
+        //                 //add item to results object
+        //                 let item = body.result[dd.pmid];
+        //                 item.male_perc = dd.malePercent;
+        //                 item.female_perc = dd.femalePercent;
+        //                 results.items.push(item);
+        //             });
+        //             // signal the caller that the results are ready
+        //             callback(results);
+        //         },
+        //         (err) => {
+        //             console.error(err)
+        //     });
+        // });
     },
 
     fetchResultDetail: function (pmId, callback) {
