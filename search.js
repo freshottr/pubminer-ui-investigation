@@ -86,60 +86,44 @@ let pubMedApi = {
 
         pmSvc.fetchSummary(environment, options)
             .then(summaryResults => {
+
+                pmids = summaryResults.result.uids;
+                pmcids = [];
+
+                // digging pmcids out from results
+                for (i = 0; i < pmids.length; i++) { 
+                    for(j = 0; j < summaryResults.result[pmids[i]].articleids.length; j++){
+                        if(summaryResults.result[pmids[i]].articleids[j].idtype == 'pmc'){
+                            pmcids[i] = summaryResults.result[pmids[i]].articleids[j].value;
+                        }
+                    }
+                } 
+
+                // leaving only numeric values (stripping off 'PMC' from front)
+                for (i = 0; i < pmcids.length; i++) {
+                    if(pmcids[i]){
+                        pmcids[i] = pmcids[i].replace(/\D/g, '');    
+                    }
+                } 
+
+                // TODO: decide if things should just fall off if we don't return dynamo results for them
                 Promise
-                    .all(demoSvc
-                        .getDemographicDetailsForIds(summaryResults.result.uids))
+                    .all(demoSvc.getDemographicDetailsForIds(pmcids))
                     .then(demoDetails => {
                         demoDetails.forEach(dd => {
-                            console.log(`processing db query results: ${dd}`);
-                            //add item to results object
-                            let item = summaryResults.result[dd.pmid];
-                            item.male_perc = dd.malePercent;
-                            item.female_perc = dd.femalePercent;
-                            results.items.push(item);
+                            //if demoDetails found, add all fields to item and push to results
+                            if(dd){
+                                let item = summaryResults.result[dd.pmid];
+                                if(item){
+                                    for(var prop in dd) item[prop] = dd[prop];
+                                    results.items.push(item);                                       
+                                }
+                            }
                         });
                         return results;
                     })
                     .then(mergedData => callback(mergedData))
             });
-
-        // httpRequest(summaryUrl, {json: true}, (err, response, body) => {
-        //     if (err) {
-        //         return console.log(err);
-        //     }
-        //
-        //     var results = {items: []};
-        //
-        //     if (!body.result) {
-        //         // signal the caller that the (empty) results are ready
-        //         callback(results);
-        //         return;
-        //     }
-        //
-        //     // Add each returned item to the result object's item array
-        //     // This code adapted from https://stackoverflow.com/questions/41212249/node-wait-for-loop-to-finish
-        //     // TODO: If psql.query fails, what happens to the 'item'? I believe we are ignoring it and not adding it to the result set.
-        //     let promises = demoSvc.getDemographicDetailsForIds(body.result.uids);
-        //
-        //     // Process once all the promises have been resolved
-        //     Promise.all(promises).then(
-        //         (qryPromises) => {
-        //             // console.log(`queryPromises ${qryPromises}`);
-        //             qryPromises.forEach((dd) => {
-        //                 console.log(`processing db query results: ${dd}`);
-        //                 //add item to results object
-        //                 let item = body.result[dd.pmid];
-        //                 item.male_perc = dd.malePercent;
-        //                 item.female_perc = dd.femalePercent;
-        //                 results.items.push(item);
-        //             });
-        //             // signal the caller that the results are ready
-        //             callback(results);
-        //         },
-        //         (err) => {
-        //             console.error(err)
-        //     });
-        // });
     },
 
     fetchResultDetail: function (pmId, callback) {
