@@ -6,12 +6,17 @@
 class DemographicsService {
 
     /**
-     * Constructs a new service backed by the provided
-     * `dbSession` database session
-     * @param dbSession a connected database session
+     * Constructs a new service backed by the AWS docClient
      */
     constructor(dbSession) {
-        this.session = dbSession;
+        var AWS = require("aws-sdk");
+
+        AWS.config.update({
+          region: "us-east-1",
+          endpoint: "https://dynamodb.us-east-1.amazonaws.com"
+        });
+        //AWS.config.setPromisesDependency(null);
+        this.docClient = new AWS.DynamoDB.DocumentClient();
     }
 
     /**
@@ -19,22 +24,56 @@ class DemographicsService {
      * @param ids an iterable of pubmed IDs
      * @return an iterable of `Promise`s of demographic details
      */
-    getDemographicDetailsForIds(ids) {
-
-        let demoQueryForId = (id) => {
-
-            // TODO: replace with dynamoDB query
+    getDemographicDetailsForIds(pmcid) {
+        let demoQueryForId = (pmcid) => {
             return new Promise((resolve, reject) => {
-                resolve({
-                    pmid: id,
-                    malePercent: 50,
-                    femalePercent: 50
-                });
+                this.docClient.get(makeParamsFromPmcid(pmcid), function(err, data){
+                    if (err) {
+                        console.error("Unable to read item. Error: ", err);
+                    } else {
+                        //console.log("GetItem succeeded:", data)
+                        if(data.Item){
+	                        resolve({
+	                            pmcid: data.Item.pmcid,
+	                            pmid: data.Item.pmid,
+	                            sentences: data.Item.sentences,
+	                            date_processed: data.Item.date_processed
+	                            })
+	                    } else{
+                            resolve({
+								pmcid: null,
+	                            pmid: null,
+	                            sentences: null,
+	                            date_processed: null
+
+                            });
+                        }                	
+                        
+                    }
+                })
             });
         };
-
-        return ids.map(demoQueryForId);
+        return pmcid.map(demoQueryForId);
     }
 }
+
+/**
+ * Returns a param object given a pubmed ID
+ * @param pubmed ID
+ * @return param object to be used to query DynamoDB
+ */
+function makeParamsFromPmcid(pmcid){
+
+    // format for docClient.get(), referencing partition key (pmcid)
+    var params = {
+          TableName: "demographics",
+          Key:{
+              "pmcid": pmcid
+          }
+        };
+
+    return(params);
+}
+
 
 module.exports = DemographicsService;
