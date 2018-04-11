@@ -16,6 +16,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "aws-sdk": "^2.223.1",
     "body-parser": "^1.18.2",
     "bower": "^1.8.2",
     "config": "^1.30.0",
