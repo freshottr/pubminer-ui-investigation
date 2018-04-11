@@ -14,8 +14,7 @@ div(class='list-group-item')
                 div(class="list-view-pf-description")
                     div(class="list-group-item-text")
                         //- Title
-                        span
-                            strong= item.title
+                        span(class="article-title") #{item.title}
                         //- Authors list, comma separated
                         - var authorList = item.authors.map(function(author){if(author.authtype == "Author") return author.name;}).join(', ');
                         div(class="pm-list-row-authors" title=`${authorList}`)= authorList
