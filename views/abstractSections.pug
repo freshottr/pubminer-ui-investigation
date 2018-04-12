@@ -1,0 +1,10 @@
+//-
+    abstractSections.pug
+
+    Display each section of the abstract. Used by details.js to render html
+    before returning it an ajax response.
+
+each value, key in data
+    div
+        span(class="abstract-text-header") #{key}:
+        span #{value}

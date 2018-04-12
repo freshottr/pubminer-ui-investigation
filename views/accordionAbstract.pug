@@ -1,0 +1,15 @@
+//-
+    accordionAbstract.pug
+
+    Display the Article Abstract section of the accordion control
+
+div(class="panel panel-default")
+    div(class="panel-heading")
+        h4(class="panel-title")
+            a(data-toggle="collapse" data-parent=`#accordion-markup${item.uid}` href=`#collapseAbstract${item.uid}`) Article Abstract
+    div(id=`collapseAbstract${item.uid}` class="panel-collapse collapse in")
+        div(class="panel-body")
+            //- Expansion Body gets replaced with abstract text from an API call.
+            div(class="expansion-body")
+                .spinner
+                .loading-text Loading

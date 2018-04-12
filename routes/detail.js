@@ -7,7 +7,7 @@ router.get('/:pmcId', (request, response) => {
     let pmcId = request.params["pmcId"]
 
     pubMedQuery.fetchResultDetail(pmcId, (details) => {
-        response.render('resultRowExpansion', {"data": details});
+        response.render('abstractSections', {"data": details});
     });
 });
 
