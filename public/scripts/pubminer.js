@@ -61,15 +61,19 @@ $(document).ready(function() {
             // Code adapted from:
             // https://stackoverflow.com/questions/3665115/create-a-file-in-memory-for-user-to-download-not-through-server
             var blob = new Blob([idsToExport], {type: 'text/csv;charset=utf8'});
-            var fileName = "my_download.csv";
+            var fileName = "pm_export_" + Date.now() + ".csv";
             if (window.navigator.msSaveOrOpenBlob) {
                 window.navigator.msSaveBlob(blob, fileName);
             } else {
+                // Create a new anchor tag element
                 var elem = window.document.createElement('a');
                 elem.href = window.URL.createObjectURL(blob);
                 elem.download = fileName;
+                // Append the anchor to the document
                 document.body.appendChild(elem);
+                // Click it
                 elem.click();
+                // Remove it from the document
                 document.body.removeChild(elem);
             }
         }

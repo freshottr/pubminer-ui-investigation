@@ -44,10 +44,4 @@ router.get('/:webenv/:querykey', function(req, res, next) {
 
 });
 
-router.post('/export', function(req, res, next) {
-    //TODO - Export a CSV file
-    console.log("Need to export " + req.body.ids);
-    return res.status(200).end();
-});
-
 module.exports = router;
