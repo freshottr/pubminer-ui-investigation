@@ -1,13 +1,19 @@
 // search.js
-let httpRequest = require('request');
-let xmlSimple   = require('xml-simple');
-let demoSvc = function() {
-    let psql = require('./db');
-    let DemographicsService  = require('./services/DemographicsService');
-    return new DemographicsService(psql);
+const httpRequest = require('request');
+const xmlSimple   = require('xml-simple');
+const config =  require('config');
+
+const demoSvc = function() {
+    const awsConfig = config.get('AwsConfig')
+    const DemographicsService  = require('./services/DemographicsService');
+    return new DemographicsService(awsConfig);
 }();
-const config = require('config').get('PubMedService');
-const pmSvc = require('./services/PubMedService').create(null, config);
+
+const pmSvc = function() {
+    const pmConfig = config.get('PubMedService');
+    const pmService = require('./services/PubMedService');
+    return pmService.create(null, pmConfig);
+}();
 
 // base url for all E-Utilities requests
 const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
@@ -106,9 +112,12 @@ let pubMedApi = {
                     }
                 } 
 
+
+                console.log(`found PMCIDs ${pmcids}`);
+
                 // TODO: decide if things should just fall off if we don't return dynamo results for them
-                Promise
-                    .all(demoSvc.getDemographicDetailsForIds(pmcids))
+                demoSvc
+                    .getDemographicDetailsForIds(pmcids)
                     .then(demoDetails => {
                         demoDetails.forEach(dd => {
                             //if demoDetails found, add all fields to item and push to results
