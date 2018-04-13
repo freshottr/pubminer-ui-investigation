@@ -1,5 +1,7 @@
 "use strict";
 
+const AWS = require('aws-sdk');
+
 /**
  * Provides services for fetching demographic details for pubmed IDs
  */
@@ -8,14 +10,9 @@ class DemographicsService {
     /**
      * Constructs a new service backed by the AWS docClient
      */
-    constructor(dbSession) {
-        var AWS = require("aws-sdk");
-
-        AWS.config.update({
-          region: "us-east-1",
-          endpoint: "https://dynamodb.us-east-1.amazonaws.com"
-        });
-        //AWS.config.setPromisesDependency(null);
+    constructor(config) {
+        AWS.config.update(config);
+        AWS.config.setPromisesDependency(null);
         this.docClient = new AWS.DynamoDB.DocumentClient();
     }
 
