@@ -116,8 +116,9 @@ let pubMedApi = {
                 console.log(`found PMCIDs ${pmcids}`);
 
                 // TODO: decide if things should just fall off if we don't return dynamo results for them
-                Promise
-                    .all(demoSvc.getDemographicDetailsForIds(pmcids))
+                // Promise
+                demoSvc
+                    .getDemographicDetailsForIds(pmcids)
                     .then(demoDetails => {
                         demoDetails.forEach(dd => {
                             //if demoDetails found, add all fields to item and push to results

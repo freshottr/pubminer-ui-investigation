@@ -21,56 +21,48 @@ class DemographicsService {
      * @param ids an iterable of pubmed IDs
      * @return an iterable of `Promise`s of demographic details
      */
-    getDemographicDetailsForIds(pmcid) {
-        let demoQueryForId = (pmcid) => {
-            return new Promise((resolve, reject) => {
-                this.docClient.get(makeParamsFromPmcid(pmcid), function(err, data){
-                    if (err) {
-                        console.error("Unable to read item. Error: ", err);
-                    } else {
-                        //console.log("GetItem succeeded:", data)
-                        if(data.Item){
-	                        resolve({
-	                            pmcid: data.Item.pmcid,
-	                            pmid: data.Item.pmid,
-	                            sentences: data.Item.sentences,
-	                            date_processed: data.Item.date_processed
-	                            })
-	                    } else{
-                            resolve({
-								pmcid: null,
-	                            pmid: null,
-	                            sentences: null,
-	                            date_processed: null
+    getDemographicDetailsForIds(pmcids) {
 
-                            });
-                        }                	
-                        
-                    }
-                })
-            });
+        const query = {
+            RequestItems: {
+                "demographics": {
+                    ConsistentRead: false,
+                    Keys: pmcids
+                        .filter(id => id != null)
+                        .map((id) => {
+                            return {
+                                pmcid: id
+                            }
+                        })
+                }
+            }
         };
-        return pmcid.map(demoQueryForId);
+
+        console.debug(`sending query ${JSON.stringify(query)}`);
+
+        return this
+            .docClient
+            .batchGet(query)
+            .promise()
+            .then(data => {
+                return data
+                .Responses
+                .demographics
+                .filter(item => item.errorStatus == null)
+                .map(item => {
+                    console.log(`got ${JSON.stringify(item)} from DB`);
+                    return {
+                        pmcid: item.pmcid,
+                        pmid: item.pmid,
+                        sentences: item.sentences,
+                        date_process: item.date_processed
+                    };
+                });
+            },
+            err => {
+                console.log(`dynamo batchGet error: ${err}`)
+            });
     }
 }
-
-/**
- * Returns a param object given a pubmed ID
- * @param pubmed ID
- * @return param object to be used to query DynamoDB
- */
-function makeParamsFromPmcid(pmcid){
-
-    // format for docClient.get(), referencing partition key (pmcid)
-    var params = {
-          TableName: "demographics",
-          Key:{
-              "pmcid": pmcid
-          }
-        };
-
-    return(params);
-}
-
 
 module.exports = DemographicsService;
