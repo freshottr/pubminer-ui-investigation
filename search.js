@@ -116,7 +116,6 @@ let pubMedApi = {
                 console.log(`found PMCIDs ${pmcids}`);
 
                 // TODO: decide if things should just fall off if we don't return dynamo results for them
-                // Promise
                 demoSvc
                     .getDemographicDetailsForIds(pmcids)
                     .then(demoDetails => {
