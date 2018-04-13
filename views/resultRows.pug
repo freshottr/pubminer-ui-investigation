@@ -1,2 +1,32 @@
+//-
+    resultRows.pug
+
+    Iterate the results and render a new row for each item.
+
 each item in results.items
-    include resultRow
+    div(class='list-group-item')
+        div(class="list-group-item-header")
+            div(class="list-view-pf-expand")
+                span(class="fa fa-angle-right")
+            div(class="list-view-pf-checkbox")
+                input(type="checkbox" class="uid" value=item.uid)
+            div(class="list-view-pf-main-info")
+                div(class="list-view-pf-body")
+                    div(class="list-view-pf-description")
+                        div(class="list-group-item-text")
+                            //- Title
+                            span(class="article-title") #{item.title}
+                            //- Authors list, comma separated
+                            - var authorList = item.authors.map(function(author){if(author.authtype == "Author") return author.name;}).join(', ');
+                            div(class="pm-list-row-authors" title=`${authorList}`)= authorList
+                    //- Icons
+                    div(class="list-view-pf-additional-info")
+                        div(class="list-view-pf-additional-info-item")
+                            span(class="pficon pficon-screen")
+                            span Abstract
+                        if item.sentences
+                            div(class="list-view-pf-additional-info-item")
+                                span(class="pficon pficon-user")
+                                span= item.sentences.length + " Sentences" 
+        //- Row expansion area
+        include resultRowExpansion 

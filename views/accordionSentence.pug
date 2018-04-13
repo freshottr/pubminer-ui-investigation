@@ -1,0 +1,17 @@
+//-
+    accordionSentence.pug
+
+    Display the Demographic Sentence section of the accordion control
+
+if item.sentences
+    div(class="panel panel-default")
+        div(class="panel-heading")
+            h4(class="panel-title")
+                a(data-toggle="collapse" data-parent=`#accordion-markup${item.uid}` href=`#collapseSentence${item.uid}`) Demographic Sentences
+        div(id=`collapseSentence${item.uid}` class="panel-collapse collapse")
+            div(class="panel-body")
+                div
+                    each sentence in item.sentences
+                        div
+                            span(class="demo-sentence-section") #{sentence.section}:
+                            span #{sentence.text}
