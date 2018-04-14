@@ -29,16 +29,10 @@ class DemographicsService {
                     ConsistentRead: false,
                     Keys: pmcids
                         .filter(id => id != null)
-                        .map((id) => {
-                            return {
-                                pmcid: id
-                            }
-                        })
+                        .map(id => ({ pmcid: id }))
                 }
             }
         };
-
-        console.debug(`sending query ${JSON.stringify(query)}`);
 
         return this
             .docClient
@@ -49,15 +43,15 @@ class DemographicsService {
                 .Responses
                 .demographics
                 .filter(item => item.errorStatus == null)
-                .map(item => {
+                .reduce((acc, item) => {
                     console.log(`got ${JSON.stringify(item)} from DB`);
-                    return {
+                    acc[item.pmid] = {
                         pmcid: item.pmcid,
-                        pmid: item.pmid,
                         sentences: item.sentences,
                         date_process: item.date_processed
                     };
-                });
+                    return acc;
+                }, {});
             },
             err => {
                 console.log(`dynamo batchGet error: ${err}`)
