@@ -65,17 +65,6 @@ let pubMedApi = {
 
     getSummaries: function(webenv, querykey, start, max, callback) {
 
-        // setup the api key parameter if an api key is available.
-        let apiKey = '';
-        if (process.env.EUTILS_API_KEY) {
-            apiKey = `&api_key=${process.env.EUTILS_API_KEY}`
-        }
-
-        // Build the e-summary url using the webenv and querykey.
-        var db = "pubmed";
-        var summaryUrl = `${eUtilsBaseUrl}esummary.fcgi?db=${db}&query_key=${querykey}&WebEnv=${webenv}&retmode=json&retstart=${start}&retmax=${max}${apiKey}`;
-
-        // E-Summary request
         const environment = {
             webenv: webenv,
             querykey: querykey
@@ -86,52 +75,43 @@ let pubMedApi = {
             start: start
         };
 
-        let results = {
-            items: []
-        };
-
         pmSvc.fetchSummary(environment, options)
             .then(summaryResults => {
-
-                pmids = summaryResults.result.uids;
-                pmcids = [];
-
-                // digging pmcids out from results
-                for (i = 0; i < pmids.length; i++) { 
-                    for(j = 0; j < summaryResults.result[pmids[i]].articleids.length; j++){
-                        if(summaryResults.result[pmids[i]].articleids[j].idtype == 'pmc'){
-                            pmcids[i] = summaryResults.result[pmids[i]].articleids[j].value;
-                        }
-                    }
-                } 
-
-                // leaving only numeric values (stripping off 'PMC' from front)
-                for (i = 0; i < pmcids.length; i++) {
-                    if(pmcids[i]){
-                        pmcids[i] = pmcids[i].replace(/\D/g, '');    
-                    }
-                } 
-
-
-                console.log(`found PMCIDs ${pmcids}`);
-
-                // TODO: decide if things should just fall off if we don't return dynamo results for them
-                demoSvc
-                    .getDemographicDetailsForIds(pmcids)
-                    .then(demoDetails => {
-                        demoDetails.forEach(dd => {
-                            //if demoDetails found, add all fields to item and push to results
-                            if(dd){
-                                let item = summaryResults.result[dd.pmid];
-                                if(item){
-                                    for(var prop in dd) item[prop] = dd[prop];
-                                    results.items.push(item);                                       
-                                }
+                const pmcids = [].concat.apply([], summaryResults
+                    .result
+                    .uids
+                    .map(uid => summaryResults
+                        .result[uid]
+                        .articleids
+                        .filter(idObj => idObj.idtype === 'pmc')
+                        .map(pmcid => {
+                            return {
+                                pmid: uid,
+                                pmcid: pmcid.value.replace(/\D/g, '')
                             }
-                        });
-                        return results;
+                        })
+                    )
+                );
+
+                demoSvc
+                    .getDemographicDetailsForIds(pmcids.map(kv => kv.pmcid))
+                    .then(demoDetails => {
+                        return summaryResults
+                            .result
+                            .uids
+                            .map(resultItem => {
+                                let item = summaryResults.result[resultItem];
+                                if (demoDetails[resultItem]) {
+                                    // TODO: copy the whole object instead of each attribute
+                                    // e.g. item.dd = demoDetails[resultItem];
+                                    for (let att in demoDetails[resultItem]) {
+                                        item[att] = demoDetails[resultItem][att];
+                                    }
+                                }
+                                return item;
+                            });
                     })
-                    .then(mergedData => callback(mergedData))
+                    .then(mergedData => callback({items: mergedData}))
             });
     },
 
