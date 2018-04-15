@@ -120,15 +120,23 @@ $(document).ready(function() {
                     // bump up the counter for more rows
                     var rowCount = parseInt($("#rowCount").val(), 10);
                     var nextRow = parseInt($("#nextRow").val(), 10) + rowCount;
+                    var itemsLoaded = parseInt($("#itemsLoaded").val(), 10) + newRows.length;
                     // if we got back less than we asked for, then there are no more to get.
                     if (newRows.length < rowCount) {
                         nextRow = 0;
                         rowCount = 0;
+                        //TODO hide "more" button.
                     }
 
                     // set the page values for the next row retrieval batch
                     $("#nextRow").val(nextRow);
                     $("#rowCount").val(rowCount);
+                    $("#itemsLoaded").val(itemsLoaded);
+
+                    // update the banner
+                    var totalItems = $("#totalItems").val();
+                    var searchTerm = $("#searchTerm").val();
+                    $(".results-summary").text(`Displaying ${itemsLoaded} of ${totalItems} results found for "${searchTerm}"`)
                 });
         }
     });

@@ -22,11 +22,15 @@ each item in results.items
                     //- Icons
                     div(class="list-view-pf-additional-info")
                         div(class="list-view-pf-additional-info-item")
-                            span(class="pficon pficon-screen")
+                            span(class="fa fa-list abstract-icon")
                             span Abstract
                         if item.sentences
                             div(class="list-view-pf-additional-info-item")
-                                span(class="pficon pficon-user")
-                                span= item.sentences.length + " Sentences" 
+                                span(class="pficon pficon-users sentence-icon")
+                                span= item.sentences.length + " Sentences"
+                        if item.table-one 
+                            div(class="list-view-pf-additional-info-item")
+                                span(class="fa fa-table table-icon")
+                                span Table 1
         //- Row expansion area
         include resultRowExpansion 
