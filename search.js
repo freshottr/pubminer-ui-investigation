@@ -12,7 +12,7 @@ const demoSvc = function() {
 const pmSvc = function() {
     const pmConfig = config.get('PubMedService');
     const pmService = require('./services/PubMedService');
-    return pmService.create(null, pmConfig);
+    return pmService.create(pmConfig);
 }();
 
 // base url for all E-Utilities requests

@@ -14,8 +14,8 @@ class PubMedService {
      * @param client the http client user for making web requests
      * @param config the configuration
      */
-    constructor(client, config) {
-        this.client = http; ///client;
+    constructor(config) {
+        this.client = http;
         this.config = config;
     }
 
@@ -28,17 +28,15 @@ class PubMedService {
      * @param query the query string as entered by the user
      * @return
      */
-    search(options, query) {
+    search(query, options) {
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
-            qs: {
-                // TODO: use the API key in the query parameters
-                db: this.config.db,
-                term: `(${query}) AND (${this.config.searchFilter})`,
+            qs: Object.assign({
+                term: query,
                 retmode: "json",
                 usehistory: "y",
-            }
+            }, options)
         };
 
         return this
@@ -46,17 +44,11 @@ class PubMedService {
             .client(searchOptions)
             .then(response => {
                 return {
-                    // environment info for subsequent query
-                    environment: {
-                        webenv: response.esearchresult.webenv,
-                        querykey: response.esearchresult.querykey
-                    },
-                    // partial query result
-                    result: {
-                        searchTerm: query,
-                        itemsFound: response.esearchresult.count,
-                        itemsReturned: response.esearchresult.retmax
-                    }
+                    webenv: response.esearchresult.webenv,
+                    querykey: response.esearchresult.querykey,
+                    searchTerm: query,
+                    itemsFound: response.esearchresult.count,
+                    itemsReturned: response.esearchresult.retmax
                 };
             })
             .catch(err => {
@@ -115,8 +107,8 @@ class PubMedService {
      * @param config the configuration
      * @return a new `PubMedService`
      */
-    static create(client, config){
-        return new this(client, config);
+    static create(config){
+        return new this(config);
     }
 }
 

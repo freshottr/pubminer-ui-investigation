@@ -4,45 +4,49 @@ const assert = require('assert');
 const config = require('config');
 const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
-const pmSvc = require('../services/PubMedService').create(null, pubMedConfig);
+const pmSvc = require('../services/PubMedService').create(pubMedConfig);
 
 
 describe('PubMedService', function() {
     describe('search', function () {
        it('should return results for a search term', function () {
-           const searchTerm = 'zika';
            const pubMedSearchResponse = require('./data/search/pubmed_search_success.json');
-               const pmMock = nock(`${pubMedConfig.baseUri}`)
-                   .get(`${pubMedConfig.searchPath}`)
-                   .query({
-                       db: `${pubMedConfig.db}`,
-                       term: `(${searchTerm}) AND (${pubMedConfig.searchFilter})`,
-                       retmode: "json",
-                       usehistory: "y"
-                   })
-                   .reply(200, pubMedSearchResponse);
+           const searchTerm = 'zika';
+           const queryOptions = {
+               db: 'pubmed'
+           };
 
-           const response = pmSvc.search(null, searchTerm);
+           //Define the expected e-utils call
+           const pmMock = nock(`${pubMedConfig.baseUri}`)
+               .get(`${pubMedConfig.searchPath}`)
+               .query(Object.assign({
+                   retmode: "json",
+                   usehistory: "y",
+                   term: searchTerm
+               }, queryOptions))
+               .reply(200, pubMedSearchResponse);
+
+           const response = pmSvc.search(searchTerm, queryOptions);
 
            return response.then( result => {
                console.log(`processing response ${JSON.stringify(result)}`);
 
                assert.equal(
-                   result.environment.webenv,
+                   result.webenv,
                    pubMedSearchResponse.esearchresult.webenv);
 
                assert.equal(
-                   result.environment.querykey,
+                   result.querykey,
                    pubMedSearchResponse.esearchresult.querykey);
 
                assert.equal(
-                   result.result.searchTerm,
+                   result.searchTerm,
                    searchTerm);
 
-               assert.equal(result.result.itemsFound,
+               assert.equal(result.itemsFound,
                    pubMedSearchResponse.esearchresult.count);
 
-               assert.equal(result.result.itemsReturned,
+               assert.equal(result.itemsReturned,
                    pubMedSearchResponse.esearchresult.retmax);
 
            });
