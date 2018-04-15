@@ -24,7 +24,7 @@ class DemographicsService {
     getDemographicDetailsForIds(pmcids) {
 
         if (pmcids.length === 0) {
-            console.warn("");
+            console.warn("getDemographicDetailsForIds called with empty set of IDs");
             return Promise.resolve({});
         }
 
@@ -32,9 +32,7 @@ class DemographicsService {
             RequestItems: {
                 "demographics": {
                     ConsistentRead: false,
-                    Keys: pmcids
-                        .filter(id => id != null)
-                        .map(id => ({ pmcid: id }))
+                    Keys: pmcids.map(id => ({ pmcid: id }))
                 }
             }
         };
@@ -49,7 +47,6 @@ class DemographicsService {
                 .demographics
                 .filter(item => item.errorStatus == null)
                 .reduce((acc, item) => {
-                    console.log(`got ${JSON.stringify(item)} from DB`);
                     acc[item.pmid] = {
                         pmcid: item.pmcid,
                         sentences: item.sentences,
