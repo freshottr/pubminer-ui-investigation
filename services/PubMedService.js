@@ -34,8 +34,8 @@ class PubMedService {
             json: true,
             qs: Object.assign({
                 term: query,
-                retmode: "json",
-                usehistory: "y",
+                retmode: 'json',
+                usehistory: 'y',
             }, options)
         };
 

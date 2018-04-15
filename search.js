@@ -26,39 +26,18 @@ let pubMedApi = {
 
     search : function(searchTerm, callback) {
 
-        // setup the api key parameter if an api key is available.
-        let apiKey = '';
-        if (process.env.EUTILS_API_KEY) {
-            apiKey = `&api_key=${process.env.EUTILS_API_KEY}`
-        }
-
-        // results object initialized with 'no results found' data
-        var results = {searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []};
-
         if (typeof searchTerm === "undefined" || searchTerm.trim().length === 0) {
             // signal the caller that the (empty) results are ready
-            callback(results);
+            callback({searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []});
 
         } else {
             // E-Search request
-            var db = "pubmed";
-            var filter = "((randomized+controlled+trial[pt])+OR+(controlled+clinical+trial[pt])+OR+(randomized[tiab]+OR+randomised[tiab])+OR+(placebo[tiab])+OR+(drug+therapy[sh])+OR+(randomly[tiab])+OR+(trial[tiab])+OR+(groups[tiab]))+NOT+(animals[mh]+NOT+humans[mh])";
-            var searchTermWithFilter = `(${filter}) AND (${searchTerm})`;
-            var searchUrl = `${eUtilsBaseUrl}esearch.fcgi?db=${db}&term=${searchTermWithFilter}&retmode=json&usehistory=y${apiKey}`;
-            httpRequest(searchUrl, {json: true}, (err, response, body) => {
-                if (err) {
-                    return console.log(err);
-                }
-
-                // populate the results object with the pieces we already know
+            const query = `(${config.get('PubMedService').searchFilter}) AND (${searchTerm})`;
+            pmSvc.search(query, {
+                db: 'pubmed',
+            }).then(results => {
                 results.searchTerm = searchTerm;
-                results.itemsFound = body.esearchresult.count;
-                results.itemsReturned = body.esearchresult.retmax;
-                results.webenv = body.esearchresult.webenv;
-                results.querykey = body.esearchresult.querykey;
-
-                // signal the caller that the results are ready
-                callback(results);
+                callback(results)
             });
         }
     },
