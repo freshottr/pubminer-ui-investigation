@@ -17,11 +17,16 @@ class DemographicsService {
     }
 
     /**
-     * Returns demographic details for the provided set of pubmed IDs.
-     * @param ids an iterable of pubmed IDs
-     * @return an iterable of `Promise`s of demographic details
+     * Returns demographic details for the provided set of `pmcid`s.
+     * @param pmcids an iterable of pubmed IDs
+     * @return a `Promise` of demographic details keyed by `pmid`
      */
     getDemographicDetailsForIds(pmcids) {
+
+        if (pmcids.length === 0) {
+            console.warn("");
+            return Promise.resolve({});
+        }
 
         const query = {
             RequestItems: {
