@@ -93,43 +93,49 @@ $(document).ready(function() {
     // handle new rows added to display
     $("#moreButton").click(function() {
 
-        let params = { start: $("#nextRow").val(),
-                       count: $("#rowCount").val()};
+        let params = { start: $("#itemsLoaded").val()};
 
-        // make sure there are more rows more to get
-        if (params.start != 0) {
+        $.get('/results/' + $("#webenv").val() + '/' + $("#querykey").val(),
+            params, function(response) {
 
-            $.get('/results/' + $("#webenv").val() + '/' + $("#querykey").val(),
-                params, function(response) {
+                let newRows = $.parseHTML(response)
 
-                    let newRows = $.parseHTML(response)
+                // add handlers to the new rows
 
-                    // add handlers to the new rows
+                // row checkbox selection
+                $(newRows).find("input[type='checkbox']").addRowCheckboxHandler();
 
-                    // row checkbox selection
-                    $(newRows).find("input[type='checkbox']").addRowCheckboxHandler();
+                // click the list-view heading then expand a row
+                $(newRows).find(".list-group-item-header").addArrowClickHandler();
 
-                    // click the list-view heading then expand a row
-                    $(newRows).find(".list-group-item-header").addArrowClickHandler();
+                // click the close button, hide the expand row and remove the active status
+                $(newRows).find(".list-group-item-container .close").addCloseRowHandler();
 
-                    // click the close button, hide the expand row and remove the active status
-                    $(newRows).find(".list-group-item-container .close").addCloseRowHandler();
+                // add the rows to the page
+                $("#resultRows").append(newRows);
 
-                    $("#resultRows").append(newRows);
+                // bump up the counter for more rows
+                let itemsLoaded = parseInt($("#itemsLoaded").val(), 10) + newRows.length;
+                $("#itemsLoaded").val(itemsLoaded);
 
-                    // bump up the counter for more rows
-                    var rowCount = parseInt($("#rowCount").val(), 10);
-                    var nextRow = parseInt($("#nextRow").val(), 10) + rowCount;
-                    // if we got back less than we asked for, then there are no more to get.
-                    if (newRows.length < rowCount) {
-                        nextRow = 0;
-                        rowCount = 0;
-                    }
+                // if we've gotten all the rows, hide the Show More button.
+                let totalItems = parseInt($("#totalItems").val(), 10);
+                if (itemsLoaded == totalItems) {
+                    $("#moreButton").hide();
+                }
 
-                    // set the page values for the next row retrieval batch
-                    $("#nextRow").val(nextRow);
-                    $("#rowCount").val(rowCount);
-                });
-        }
+                // update the banner
+                let searchTerm = $("#termSearched").val();
+                $(".results-summary").text(`Displaying ${itemsLoaded} of ${totalItems} results found for "${searchTerm}"`)
+            });
+
     });
+
+    // hide the Show More button if there are no more rows to get
+    let itemsLoaded = parseInt($("#itemsLoaded").val(), 10);
+    let totalItems = parseInt($("#totalItems").val(), 10);
+    if (itemsLoaded == totalItems) {
+        $("#moreButton").hide();
+    }
+
 });

@@ -8,13 +8,14 @@ block scripts
     script(src="scripts/pubminer.js")
 block content
     if results.items.length == 0
-        p(style='margin: 24px 0px 0px 20px; font-style: italic;') No results found for "#{qryResult.searchTerm}"
+        p(class='results-summary') No results found for "#{qryResult.searchTerm}"
     else
-        p(style='margin: 24px 0px 0px 20px; font-style: italic;') Displaying #{qryResult.itemsReturned} of #{qryResult.itemsFound} results found for "#{qryResult.searchTerm}"
         input(type="hidden" id="webenv" value=qryResult.webenv)
         input(type="hidden" id="querykey" value=qryResult.querykey)
-        input(type="hidden" id="nextRow" value=nextRow)
-        input(type="hidden" id="rowCount" value=rowCount)
+        input(type="hidden" id="itemsLoaded" value=results.items.length)
+        input(type="hidden" id="totalItems" value=qryResult.itemsFound)
+        input(type="hidden" id="termSearched" value=qryResult.searchTerm)
+        p(class='results-summary') Displaying #{results.items.length} of #{qryResult.itemsFound} results found for "#{qryResult.searchTerm}"
         div(class='container-fluid')
             div(id="resultRows" class='list-group list-view-pf list-view-pf-view')
                 include resultRows
