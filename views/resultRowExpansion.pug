@@ -10,10 +10,10 @@ div(class="list-group-item-container container-fluid hidden")
         if (item.pubdate) 
             span(style="padding-right: 10px") Publication Date:
                 span(style="padding-left: 3px; font-weight: bold")= item.pubdate
-            span(style="padding-right: 10px") PubMed Central:&nbsp;
-                a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/${item.pmcid}`) #{item.pmcid}
-            span(style="padding-right: 10px") PubMed:&nbsp;
-                a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${item.pmid}`) #{item.pmid}
+        span(style="padding-right: 10px") PubMed Central:&nbsp;
+            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/${item.pmcid}`) #{item.pmcid}
+        span(style="padding-right: 10px") PubMed:&nbsp;
+            a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${item.pmid}`) #{item.pmid}
     //- Accordion Control
     div(class="panel-group" id=`accordion-markup${item.uid}` style="width:100%")
         include accordionAbstract
