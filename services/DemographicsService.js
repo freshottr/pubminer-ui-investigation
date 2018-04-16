@@ -47,8 +47,9 @@ class DemographicsService {
                 .demographics
                 .filter(item => item.errorStatus == null)
                 .reduce((acc, item) => {
-                    acc[item.pmid] = {
+                    acc[item.pmcid] = {
                         pmcid: item.pmcid,
+                        pmid: item.pmid,
                         sentences: item.sentences,
                         date_process: item.date_processed
                     };

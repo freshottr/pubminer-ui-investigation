@@ -2,6 +2,7 @@
 const httpRequest = require('request');
 const xmlSimple   = require('xml-simple');
 const config =  require('config');
+const DocumentHelper = require('./DocumentHelper');
 
 const demoSvc = function() {
     const awsConfig = config.get('AwsConfig')
@@ -31,13 +32,33 @@ let pubMedApi = {
             callback({searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []});
 
         } else {
-            // E-Search request
+            console.log(`calling esearch for ${searchTerm}...`);
             const query = `(${config.get('PubMedService').searchFilter}) AND (${searchTerm})`;
             pmSvc.search(query, {
                 db: 'pubmed',
             }).then(results => {
-                results.searchTerm = searchTerm;
-                callback(results)
+                console.log(`calling elink...`);
+                return pmSvc.link({
+                    db: 'pmc',
+                    dbfrom: 'pubmed',
+                    linkname: 'pubmed_pmc',
+                    cmd: 'neighbor_history',
+                    query_key: results.querykey,
+                    WebEnv: results.webenv
+                });
+            }).then(linkResults => {
+                console.log(`calling pmc esearch for open access articles...`);
+                return pmSvc.search('open access[filter]', {
+                    query_key: linkResults.querykey,
+                    WebEnv: linkResults.webenv
+                });
+            }).then(pmcSearchResults => {
+                //Override the search term
+                pmcSearchResults.searchTerm = searchTerm;
+                callback(pmcSearchResults);
+            }).catch(err => {
+                console.log(`error performing search ${err}`);
+                callback(errorOf('unexpected error performing search'));
             });
         }
     },
@@ -56,25 +77,11 @@ let pubMedApi = {
 
         pmSvc.fetchSummary(environment, options)
             .then(summaryResults => {
-                const pmcids = [].concat.apply([], summaryResults
-                    .result
-                    .uids
-                    .map(uid => summaryResults
-                        .result[uid]
-                        .articleids
-                        .filter(idObj => idObj.idtype === 'pmc')
-                        .map(pmcid => {
-                            return {
-                                pmid: uid,
-                                pmcid: pmcid.value.replace(/\D/g, '')
-                            }
-                        })
-                    )
-                );
-
                 demoSvc
-                    .getDemographicDetailsForIds(pmcids.map(kv => kv.pmcid))
+                    .getDemographicDetailsForIds(summaryResults.result.uids)
                     .then(demoDetails => {
+                        const linkedIds = DocumentHelper
+                            .getLinkedIdsByType(summaryResults, 'pmid', x => x);
                         return summaryResults
                             .result
                             .uids
@@ -87,16 +94,21 @@ let pubMedApi = {
                                         item[att] = demoDetails[resultItem][att];
                                     }
                                 }
+                                //overwrite the uid with the pmid
+                                item.uid = linkedIds[item.uid];
                                 return item;
                             });
                     })
-                    .then(mergedData => callback({items: mergedData}))
+                    .then(mergedData => {
+                        // console.log(`mergedData ${JSON.stringify(mergedData[0])}`)
+                        callback({items: mergedData})
+                    })
             });
     },
 
     fetchResultDetail: function (pmId, callback) {
         let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pubmed&id=${pmId}&retmode=xml`;
-        console.log(`fetching details for ${pmId} at ${uri}`);
+        console.log(`fetching details for pmid ${pmId} at ${uri}`);
         httpRequest(uri, null, (err, response, body) => {
 
             let result = {};
@@ -106,8 +118,6 @@ let pubMedApi = {
                 result.error = "failed to get publication details";
                 return;
             }
-
-            console.log('body:', body); // TODO: remove verbose logging later
 
             // extract the abstracts from result details
             xmlSimple.parse(body, (err, parsed) => {
@@ -134,7 +144,7 @@ let pubMedApi = {
                              result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
                          });
                     // ... or an object
-                    } else if (abstract && typeof abstract == 'object'){
+                    } else if (abstract && typeof abstract === 'object'){
                         result["abstract"] = abstract['#'];
                     // ... or plain text
                     } else {

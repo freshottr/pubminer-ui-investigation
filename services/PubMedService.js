@@ -24,8 +24,8 @@ class PubMedService {
      * `webenv` and `querykey` for subsequent (summary) requests. It also
      * includes the total number of results.
      *
-     * @param options
      * @param query the query string as entered by the user
+     * @param options additional query parameters to be included with the request
      * @return
      */
     search(query, options) {
@@ -43,6 +43,7 @@ class PubMedService {
             // E-search
             .client(searchOptions)
             .then(response => {
+                console.log(`processing esearch result for ${query}`);
                 return {
                     webenv: response.esearchresult.webenv,
                     querykey: response.esearchresult.querykey,
@@ -57,6 +58,29 @@ class PubMedService {
                     error: `Unexpected error executing PubMed Search for ${query}`
                 };
             });
+    }
+
+    link(options) {
+
+        const linkOptions = {
+            uri: `${this.config.baseUri}${this.config.elinkPath}`,
+            json: true,
+            qs: Object.assign({
+                retmode: 'json',
+                usehistory: 'y',
+            }, options)
+        };
+
+        return this
+            .client(linkOptions)
+            .then(response => {
+                console.log(`processing elink result`);
+                const lnkSet = response.linksets[0];
+                return {
+                    webenv: lnkSet.webenv,
+                    querykey: lnkSet.linksetdbhistories[0].querykey
+                };
+            })
     }
 
     /**
