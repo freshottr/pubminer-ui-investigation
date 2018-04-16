@@ -3,7 +3,12 @@
 class DocumentHelper {
 
     /**
-     * Returns the Given an `e-utils` summary document with results
+     * Returns a map of the summary's `uid`s to IDs of type `idType`. `uid`s that
+     * to not have a linked ID of type `idType` are removed from the result set.
+     *
+     * This method may raise an exception if the document is not in the expected
+     * format.
+     *
      * @param summaryDocument a JSON document as returned by `esummary` API
      * @param idType used as predicate filter on the articleids
      * @param xform a tranform function to apply to the linked ID
@@ -19,7 +24,10 @@ class DocumentHelper {
                     .articleids
                     .find(idObj => idObj.idtype === idType)
 
-                acc[uid] = xform(linkedId.value);
+                if (linkedId) {
+                    acc[uid] = xform(linkedId.value);
+                }
+
                 return acc;
             }, {});
     }
