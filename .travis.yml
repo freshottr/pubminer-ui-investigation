@@ -12,7 +12,8 @@ install:
   - npm install
 
 before_script:
-- npm start -- --silent &
+  - npm start -- --silent &
+  - sleep 5
 
 script:
   - $(npm bin)/cypress run  --spec cypress/integration/search_spec.js
