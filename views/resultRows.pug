@@ -23,14 +23,14 @@ each item in results.items
                     div(class="list-view-pf-additional-info")
                         div(class="list-view-pf-additional-info-item")
                             span(class="fa fa-list abstract-icon")
-                            span Abstract
+                            span(class="icon-text") Abstract
                         if item.sentences
                             div(class="list-view-pf-additional-info-item")
                                 span(class="pficon pficon-users sentence-icon")
-                                span= item.sentences.length + " Sentences"
-                        if item.table-one 
+                                span(class="icon-text")= item.sentences.length + " Sentences"
+                        if item.table1
                             div(class="list-view-pf-additional-info-item")
                                 span(class="fa fa-table table-icon")
-                                span Table 1
+                                span(class="icon-text") Table 1
         //- Row expansion area
         include resultRowExpansion 
