@@ -6,16 +6,16 @@
 div(class="list-group-item-container container-fluid hidden")
     div(class="close")
         span(class="pficon pficon-close")
-    div(style="padding-bottom: 8px")
+    div(class="exp-data-header")
         if (item.pubdate) 
-            span(style="padding-right: 10px") Publication Date:
-                span(style="padding-left: 3px; font-weight: bold")= item.pubdate
-        span(style="padding-right: 10px") PubMed Central:&nbsp;
+            span(class="exp-data-title") Publication Date:
+                span(class="exp-data-date")= item.pubdate
+        span(class="exp-data-title") PubMed Central:&nbsp;
             a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pmc/${item.pmcid}`) #{item.pmcid}
-        span(style="padding-right: 10px") PubMed:&nbsp;
+        span(class="exp-data-title") PubMed:&nbsp;
             a(target="_blank" href=`https://www.ncbi.nlm.nih.gov/pubmed/${item.pmid}`) #{item.pmid}
     //- Accordion Control
-    div(class="panel-group" id=`accordion-markup${item.uid}` style="width:100%")
+    div(class="panel-group pm-accordion" id=`accordion-markup${item.uid}`)
         include accordionAbstract
         include accordionSentence
         include accordionTable1
