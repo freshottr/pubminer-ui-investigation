@@ -14,8 +14,8 @@ class PubMedService {
      * @param client the http client user for making web requests
      * @param config the configuration
      */
-    constructor(client, config) {
-        this.client = http; ///client;
+    constructor(config) {
+        this.client = http;
         this.config = config;
     }
 
@@ -24,39 +24,32 @@ class PubMedService {
      * `webenv` and `querykey` for subsequent (summary) requests. It also
      * includes the total number of results.
      *
-     * @param options
      * @param query the query string as entered by the user
+     * @param options additional query parameters to be included with the request
      * @return
      */
-    search(options, query) {
+    search(query, options) {
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
-            qs: {
-                // TODO: use the API key in the query parameters
-                db: this.config.db,
-                term: `(${query}) AND (${this.config.searchFilter})`,
-                retmode: "json",
-                usehistory: "y",
-            }
+            qs: Object.assign({
+                term: query,
+                retmode: 'json',
+                usehistory: 'y',
+            }, options)
         };
 
         return this
             // E-search
             .client(searchOptions)
             .then(response => {
+                console.log(`processing esearch result for ${query}`);
                 return {
-                    // environment info for subsequent query
-                    environment: {
-                        webenv: response.esearchresult.webenv,
-                        querykey: response.esearchresult.querykey
-                    },
-                    // partial query result
-                    result: {
-                        searchTerm: query,
-                        itemsFound: response.esearchresult.count,
-                        itemsReturned: response.esearchresult.retmax
-                    }
+                    webenv: response.esearchresult.webenv,
+                    querykey: response.esearchresult.querykey,
+                    searchTerm: query,
+                    itemsFound: response.esearchresult.count,
+                    itemsReturned: response.esearchresult.retmax
                 };
             })
             .catch(err => {
@@ -65,6 +58,29 @@ class PubMedService {
                     error: `Unexpected error executing PubMed Search for ${query}`
                 };
             });
+    }
+
+    link(options) {
+
+        const linkOptions = {
+            uri: `${this.config.baseUri}${this.config.elinkPath}`,
+            json: true,
+            qs: Object.assign({
+                retmode: 'json',
+                usehistory: 'y',
+            }, options)
+        };
+
+        return this
+            .client(linkOptions)
+            .then(response => {
+                console.log(`processing elink result`);
+                const lnkSet = response.linksets[0];
+                return {
+                    webenv: lnkSet.webenv,
+                    querykey: lnkSet.linksetdbhistories[0].querykey
+                };
+            })
     }
 
     /**
@@ -115,8 +131,8 @@ class PubMedService {
      * @param config the configuration
      * @return a new `PubMedService`
      */
-    static create(client, config){
-        return new this(client, config);
+    static create(config){
+        return new this(config);
     }
 }
 

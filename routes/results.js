@@ -9,7 +9,7 @@ router.get('/', (request, response) => {
     // search PubMed for results matching the search terms
     pubMedQuery.search(request.query.searchTerm, (queryResult) => {
 
-        if (queryResult.itemsFound == 0) {
+        if (queryResult.itemsFound === 0) {
             // Render the 'results' view
             response.render('results', {"results": {items: []},
                                         "qryResult": queryResult});
