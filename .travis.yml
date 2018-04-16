@@ -1,3 +1,18 @@
 language: node_js
+
 node_js:
-- "stable"
+  - 9.11.1
+
+cache:
+  directories:
+    - ~/.npm
+    - node_modules
+
+install:
+  - npm install
+
+before_script:
+- npm start -- --silent &
+
+script:
+  - $(npm bin)/cypress run  --spec cypress/integration/search_spec.js

@@ -8,7 +8,7 @@ describe('Pubminer Search Spec', function() {
         });
 
         it('shows results for query', function() {
-            let term = "breast cancer";
+            const term = 'mallet finger';
             cy.search(term);
 
             cy.url()

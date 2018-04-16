@@ -20,9 +20,9 @@
  - In your browser, navigate to [http://localhost:8081](http://localhost:8081)
 
 ### Additional Information
-#### Running Integration Tests with Cyprus
+#### Running Integration Tests with Cypress
  - ensure the application and database are running
- - run `npm run cyprus:open`
+ - run `npm run cypress:open`
  - select `search_spec.js` from the Integration Test list. The tests should automatically start executing
 
 #### PubMed API key
