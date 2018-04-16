@@ -50,6 +50,7 @@ class DemographicsService {
                     acc[item.pmcid] = {
                         pmcid: item.pmcid,
                         pmid: item.pmid,
+                        table1: item.table1,
                         sentences: item.sentences,
                         date_process: item.date_processed
                     };
