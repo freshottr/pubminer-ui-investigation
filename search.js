@@ -139,14 +139,12 @@ let pubMedApi = {
                     // The abstract can be an array of sections...
                     if (Array.isArray(abstract)) {
                          abstract.forEach((abstractTxt) => {
-                             console.log(abstractTxt['@'].Label); // the abstract type
-                             console.log(abstractTxt['#']); // the abstract's text
                              result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
                          });
-                    // ... or an object
+                    // or an object...
                     } else if (abstract && typeof abstract === 'object'){
                         result["abstract"] = abstract['#'];
-                    // ... or plain text
+                    // or plain text
                     } else {
                         result["abstract"] = abstract;
                     }
