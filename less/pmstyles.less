@@ -15,10 +15,18 @@
 @img-path: "../../bower_components/patternfly/dist/img";
 
 // PubMiner Styles
-@link-color: orange;
 #searchTerm {
      width: 400px;
      font-size: 14px;
+}
+.unselect-icon {
+     color: @color-pf-black-400;
+}
+.search-loading {
+    margin-top: 15px;
+}
+.search-loading-text {
+    font-size: large;
 }
 .results-summary {
     margin: 24px 0px 0px 20px;
@@ -29,7 +37,7 @@
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
-    color: #348cb1;
+    color: @color-pf-gold-500;
 }
 .loading-text {
     text-align: center;
@@ -40,26 +48,26 @@
 .abstract-text-header {
     padding-right: 3px;
     font-weight: bold;
-    color: #8a0e0e;
+    color: @color-pf-red-300;
 }
 .list-group-item-container {
-    background-color: #ececec;
+    background-color: @color-pf-black-200;
 }
 .article-title {
     font-weight: bold;
     font-size: 14px;
 }
 .abstract-icon {
-    color: #8a0e0e;
+    color: @color-pf-red-300;
 }
 .sentence-icon {
-    color: #154a7d;
+    color: @color-pf-light-blue-600;
 }
 .table-icon {
-    color: #117d48;
+    color: @color-pf-green-500;
 }
 .demo-sentence-section {
-    color: #154a7d;
+    color: @color-pf-light-blue-600;
     font-weight: bold;
     padding-right: 3px;
 }
