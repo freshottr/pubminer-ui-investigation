@@ -28,7 +28,7 @@ let pubMedApi = {
     search : function(searchParams, callback) {
 
         let searchTerm = searchParams.searchTerm;
-        let pubDateFilter = searchParams.pubDateFilter;
+        let pubDateFilter = searchParams.pubDateFilter; // all/prior1/prior2/prior3
 
         if (typeof searchTerm === "undefined" || searchTerm.trim().length === 0) {
             // signal the caller that the (empty) results are ready
