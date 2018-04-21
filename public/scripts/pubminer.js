@@ -55,7 +55,7 @@ $(document).ready(function() {
         $(".search-loading").toggleClass("hidden");
     });
 
-    $("#table1").DataTable({
+    $("#pm-datatable-whatsnew").DataTable({
         columns: [
             {data: "pmcid"},
             {data: "title"}
