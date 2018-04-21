@@ -1,0 +1,24 @@
+//-
+   searchBar.pug
+
+   Template for the search bar.
+
+div(class="container-fluid")
+    div(class="row toolbar-pf")
+        div(class="col-sm-12")
+            form(id="searchForm" class="toolbar-pf-actions" method='GET' action='/results')
+                div(class="form-group toolbar-pf-filter")
+                    div(class="input-group")
+                        input(id="searchTerm" name="searchTerm" class="form-control" type="text" placeholder="Search Terms")
+                div(class="form-group toolbar-pf-filter")
+                    select(class="selectpicker" name="pubDateFilter")
+                        option(value="all") All publication dates
+                        option(value="prior3") Prior three years only
+                        option(value="prior2") Prior two years only
+                        option(value="prior1") Prior year only
+                div(class="form-group toolbar-pf-find")
+                    button(class="btn btn-link btn-find" type="submit")
+                        span(class="fa fa-search")
+    div(class="search-loading hidden")
+        div(class="search-loading-spinner spinner")
+        div(class="search-loading-text loading-text" ) Preparing search results...

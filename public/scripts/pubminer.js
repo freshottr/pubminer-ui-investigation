@@ -48,14 +48,58 @@ $.fn.addRowCheckboxHandler = function() {
 
 $(document).ready(function() {
 
+    $(".selectpicker").selectpicker();
+
+    $("form").submit(function() {
+        $("#searchForm button[type='submit']").prop("disabled", true);
+        $(".search-loading").toggleClass("hidden");
+    });
+
+    $("#table1").DataTable({
+        columns: [
+            {data: "pmcid"},
+            {data: "title"}
+        ],
+        ajax: 'data/wndata.json',
+        dom: 't',
+        language: {
+            zeroRecords: "No records found"
+        },
+        initComplete: function() {
+            var rowCount = this.api().$('tbody tr').length;
+            $("#update-count").text(rowCount + " new articles added")
+        }
+    });
+
+    // Click handler for Select All
+    $("#selectAllMenuItem").click(function(){
+        $("input.uid").each(function(){
+            $(this).prop('checked', true);
+        });
+    });
+
+    // Click handler for Unselect All
+    $("#unSelectAllMenuItem").click(function(){
+        $("input.uid:checked").each(function(){
+            $(this).prop('checked', false);
+        });
+    });
+
     // Click handler for Export button
     $("#exportMenuItem").click(function(){
         if ($("input.uid:checked").length > 0) {
-            var idsToExport = '"pmid","title"';
+            var idsToExport = '"pmid","pmcid","title","sentences","table1"';
             $("input.uid:checked").each(function(){
                 let id = $(this).val();
+                let pmcid = $(this).closest(".list-group-item").find("input.pmcid").val();
+                if (!pmcid) {
+                    pmcid = "";
+                }
                 let title = $(this).closest(".list-group-item-header").find(".article-title").text();
-                idsToExport += `,\n${id},"${title}"`;
+                let sentences = $(this).closest(".list-group-item").find(".demo-sentence-section").length > 0 ? "Yes" : "No";
+                let table1 = $(this).closest(".list-group-item").find(".pm-table1").length > 0 ? "Yes" : "No";
+                idsToExport += `,\n${id},${pmcid},"${title}",${sentences},${table1}`;
+                $(this).prop('checked', false);
             });
 
             // Code adapted from:
