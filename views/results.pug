@@ -8,14 +8,22 @@ block scripts
     script(src="scripts/pubminer.js")
 block content
     if results.items.length == 0
+<<<<<<< HEAD
         p(id="resultsCount" class='results-summary') No results found for "#{qryResult.searchTerm}"
+=======
+        p(class='results-summary') No results found for &quot;#{qryResult.searchTerm}&quot;
+>>>>>>> Changing quotes to html entities.
     else
         input(type="hidden" id="webenv" value=qryResult.webenv)
         input(type="hidden" id="querykey" value=qryResult.querykey)
         input(type="hidden" id="itemsLoaded" value=results.items.length)
         input(type="hidden" id="totalItems" value=qryResult.itemsFound)
         input(type="hidden" id="termSearched" value=qryResult.searchTerm)
+<<<<<<< HEAD
         p(id="resultsCount" class='results-summary') Displaying #{results.items.length} of #{qryResult.itemsFound} results found for "#{qryResult.searchTerm}"
+=======
+        p(class='results-summary') Displaying #{results.items.length} of #{qryResult.itemsFound} results found for &quot;#{qryResult.searchTerm}&quot;
+>>>>>>> Changing quotes to html entities.
         div(class='container-fluid')
             div(id="resultRows" class='list-group list-view-pf list-view-pf-view')
                 include resultRows
