@@ -16,7 +16,7 @@ router.get('/', (request, response) => {
                     items: []
                 },
                 qryResult: queryResult,
-                error: queryResult.error
+                error: [queryResult.error] //TODO Can we make queryResult.error an array?
             };
 
             response.render('results', errResponse);
