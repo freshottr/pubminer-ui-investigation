@@ -1,0 +1,36 @@
+//- messages.pug
+
+    Display a block of messages with styling for appropriate severities
+
+//- pf-message-section: Display a list of messages matching the target severity
+        messages - array of message objects
+        severity - severity to include in this block
+        alertclass - alert class to apply to all messages in this section
+        iconclass - icon class to apply to all messages in this section
+mixin pf-message-section(messages, severity, alertclass, iconclass)
+    each msg, sev in messages
+        if (sev == severity)
+            +pf-message(msg)(alert=['alert',alertclass], icon=['pficon', iconclass])
+
+//- pf-message: Display a single message and apply appropriate classes.
+        text - message text to display
+        attributes.alert - alert classes to apply to this message
+        attributes.icon - icon classes to apply to this message
+mixin pf-message(text)
+    div(class="pm-message")
+        div(class=attributes.alert)
+            span(class=attributes.icon)
+            strong= text
+
+div(class="pm-message-area")
+    //- Error
+    +pf-message-section(error, '0', 'alert-danger', 'pficon-error-circle-o')
+
+    //- Warning
+    +pf-message-section(error, '1', 'alert-warning', 'pficon-warning-triangle-o')
+
+    //- Info
+    +pf-message-section(error, '2', 'alert-info', 'pficon-info')
+
+    //- Success
+    +pf-message-section(error, '3', 'alert-success', 'pficon-ok')

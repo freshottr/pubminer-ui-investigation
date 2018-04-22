@@ -52,6 +52,7 @@ $(document).ready(function() {
 
     $("form").submit(function() {
         $("#searchForm button[type='submit']").prop("disabled", true);
+        $(".pm-message-area").toggleClass("hidden");
         $(".search-loading").toggleClass("hidden");
     });
 

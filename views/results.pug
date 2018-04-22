@@ -8,8 +8,7 @@ block scripts
     script(src="scripts/pubminer.js")
 block content
     if error
-        // stubbed error response
-        p(class='results-summary') #{error}
+        include messages
     else if results.items.length === 0
         p(id="resultsCount" class='results-summary') No results found for &quot;#{qryResult.searchTerm}&quot;
     else
