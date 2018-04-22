@@ -17,7 +17,7 @@ mixin pf-message-section(messages, severity, alertclass, iconclass)
         attributes.alert - alert classes to apply to this message
         attributes.icon - icon classes to apply to this message
 mixin pf-message(text)
-    div(class="pf-message" style="margin: 20px;")
+    div(class="pm-message")
         div(class=attributes.alert)
             span(class=attributes.icon)
             strong= text
