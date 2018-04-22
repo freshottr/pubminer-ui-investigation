@@ -66,8 +66,8 @@ let pubMedApi = {
                 pmcSearchResults.searchTerm = searchTerm;
                 callback(pmcSearchResults);
             }).catch(err => {
-                console.log(`error performing search ${err}`);
-                callback(errorOf('unexpected error performing search'));
+                console.error(`error performing search ${err}`);
+                callback(DocumentHelper.searchErrorResponse(searchTerm, err));
             });
         }
     },
@@ -86,6 +86,7 @@ let pubMedApi = {
 
         pmSvc.fetchSummary(environment, options)
             .then(summaryResults => {
+                console.log(`summaryResult ${JSON.stringify(summaryResults)}`);
                 demoSvc
                     .getDemographicDetailsForIds(summaryResults.result.uids)
                     .then(demoDetails => {
@@ -109,9 +110,12 @@ let pubMedApi = {
                             });
                     })
                     .then(mergedData => {
-                        // console.log(`mergedData ${JSON.stringify(mergedData[0])}`)
                         callback({items: mergedData})
-                    })
+                    });
+            })
+            .catch(err => {
+                console.error(`unexpected error processing getSummaries ${err}`, err);
+                callback(errorOf('unexpected error performing search'));
             });
     },
 

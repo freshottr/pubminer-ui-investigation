@@ -1,7 +1,8 @@
 "use strict";
 
-// TODO: remove this dependency here once it is being injected elsewhere
 const http = require('request-promise');
+const DocHelper = require('../DocumentHelper');
+const Errors = require('../Errors');
 
 /**
  * Provides high-level APIs for working with NCBI's E-utils HTTP APIs
@@ -11,7 +12,6 @@ class PubMedService {
     /**
      * Constructs a new `PubMedService` backed by the provided HTTP client
      * and configuration.
-     * @param client the http client user for making web requests
      * @param config the configuration
      */
     constructor(config) {
@@ -29,6 +29,7 @@ class PubMedService {
      * @return
      */
     search(query, options) {
+
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
@@ -43,21 +44,13 @@ class PubMedService {
             // E-search
             .client(searchOptions)
             .then(response => {
-                console.log(`processing esearch result for ${query}`);
-                return {
-                    webenv: response.esearchresult.webenv,
-                    querykey: response.esearchresult.querykey,
-                    searchTerm: query,
-                    itemsFound: response.esearchresult.count,
-                    itemsReturned: response.esearchresult.retmax
-                };
+                const searchResult = DocHelper.extractSearchResults(response, query);
+                console.log(`esearch found ${searchResult.itemsFound} for ${query}`);
+                if (searchResult.itemsFound === "0") {
+                    throw new Errors.EmptySearchResultError(query);
+                }
+                return searchResult;
             })
-            .catch(err => {
-                console.error(`unexpected error executing PubMed Search or Link for ${query}`, err);
-                return {
-                    error: `Unexpected error executing PubMed Search for ${query}`
-                };
-            });
     }
 
     link(options) {
@@ -75,17 +68,15 @@ class PubMedService {
             .client(linkOptions)
             .then(response => {
                 console.log(`processing elink result`);
-                const lnkSet = response.linksets[0];
-                return {
-                    webenv: lnkSet.webenv,
-                    querykey: lnkSet.linksetdbhistories[0].querykey
-                };
+                return DocHelper
+                    .extractEnvironmentFromLinkResults(response);
             })
     }
 
     /**
      * Fetches the article summaries based on the provided `options`.
-     * @param options
+     * @param environment the `WebEnv` and `query_key` values
+     * @param options optional query parameters
      * @return the summary for the article
      */
     fetchSummary(environment, options) {
@@ -97,8 +88,8 @@ class PubMedService {
                 db: this.config.db,
                 WebEnv: environment.webenv,
                 query_key: environment.querykey,
-                retstart: options.start,
-                retmax: options.max,
+                retstart: options.start || 0,
+                retmax: options.max || 20, // TODO: use config value here
                 retmode: "json"
             }
         };
@@ -107,9 +98,7 @@ class PubMedService {
             .client(summaryOptions)
             .catch(err => {
                 console.error(`error (${err}) performing eSummary for ${JSON.stringify(summaryOptions)}`);
-                return {
-                    error: "Unexpected error executing PubMed Summary request"
-                };
+                throw err;
             });
     }
 
