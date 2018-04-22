@@ -6,19 +6,19 @@ const QueryHelper = require('../QueryHelper');
 describe('QueryTermHelper', function () {
     describe('.isEmpty', function () {
 
-        it('return true for undefined', function () {
+        it('returns true for undefined', function () {
             assert.strictEqual(QueryHelper.isEmptyTerm(null), true);
         });
 
-        it('return true for empty string', function () {
+        it('returns true for empty string', function () {
             assert.strictEqual(QueryHelper.isEmptyTerm(""), true);
         });
 
-        it('return true for non-string', function () {
+        it('returns true for non-string', function () {
             assert.strictEqual(QueryHelper.isEmptyTerm(["hello"]), true);
         });
 
-        it('return false for non-empty string', function () {
+        it('returns false for non-empty string', function () {
             assert.strictEqual(QueryHelper.isEmptyTerm("not empty"), false);
         });
     });
@@ -49,31 +49,31 @@ describe('QueryTermHelper', function () {
 
     describe('.combineSearchTerms', function () {
 
-        it('return a provided string unchanged', function () {
+        it('returns a provided string unchanged', function () {
             const nonArrayTerm = 'xyz';
             const combinedTerms = QueryHelper.combineSearchTerms(nonArrayTerm);
             assert.strictEqual(combinedTerms, nonArrayTerm);
         });
 
-        it('return the single item in an array unchanged', function () {
+        it('returns the single item in an array unchanged', function () {
             const singleArrayTerm = ['xyz'];
             const combinedTerms = QueryHelper.combineSearchTerms(singleArrayTerm);
             assert.strictEqual(combinedTerms, singleArrayTerm[0]);
         });
 
-        it('remove empty terms', function () {
+        it('removes empty terms', function () {
             const term = 'xyz'
             const combinedTerms = QueryHelper.combineSearchTerms(['', term, null]);
             assert.strictEqual(combinedTerms, term);
         });
 
-        it('combine multiple two terms', function () {
+        it('combines two terms', function () {
             const terms = ['xyz', 'abc'];
             const combinedTerms = QueryHelper.combineSearchTerms(terms);
             assert.strictEqual(combinedTerms, `(${terms[0]}) AND (${terms[1]})`);
         });
 
-        it('combine multiple multiple terms', function () {
+        it('combines multiple terms', function () {
             const terms = ['xyz', 'abc', 'def'];
             const combinedTerms = QueryHelper.combineSearchTerms(terms);
             assert.strictEqual(combinedTerms, `(${terms[0]}) AND (${terms[1]}) AND (${terms[2]})`);
