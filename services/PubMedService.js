@@ -108,11 +108,22 @@ class PubMedService {
      * returned by `efetch` and converts it to `json`.
      * @param articleId
      * @param options
+     * @return an object with an `abstract` attribute
      */
     fetchArticleDetails(articleId, options) {
-        return {
-            error: 'fetchArticleDetails has not been implemented'
+        const fetchOptions = {
+            uri: `${this.config.baseUri}${this.config.efetchPath}`,
+            json: true,
+            qs: Object.assign({
+                retmode: 'xml',
+                id: articleId
+            }, options)
         };
+
+        console.log(`fetching details for ${articleId}`);
+
+        return this.client(fetchOptions)
+            .then(doc => DocHelper.extractAbstract(doc));
     }
 
     /**

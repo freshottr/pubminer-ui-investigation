@@ -4,6 +4,7 @@
     "searchPath": "/entrez/eutils/esearch.fcgi",
     "summaryPath" : "/entrez/eutils/esummary.fcgi",
     "elinkPath": "/entrez/eutils/elink.fcgi",
+    "efetchPath": "/entrez/eutils/efetch.fcgi",
     "db": "pubmed",
     "searchFilter" : "((randomized controlled trial[pt]) OR (controlled clinical trial[pt]) OR (randomized[tiab] OR randomised[tiab]) OR (placebo[tiab]) OR (drug therapy[sh]) OR (randomly[tiab]) OR (trial[tiab]) OR (groups[tiab])) NOT (animals[mh] NOT humans[mh])"
   },

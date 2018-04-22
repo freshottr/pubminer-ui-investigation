@@ -1,3 +1,4 @@
+"use strict";
 
 class ErrorSeverity {
     static get Info() {

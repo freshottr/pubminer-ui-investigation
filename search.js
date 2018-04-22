@@ -1,6 +1,4 @@
 // search.js
-const httpRequest = require('request');
-const xmlSimple   = require('xml-simple');
 const config =  require('config');
 const DocumentHelper = require('./DocumentHelper');
 const QueryHelper = require('./QueryHelper');
@@ -16,9 +14,6 @@ const pmSvc = function() {
     const pmService = require('./services/PubMedService');
     return pmService.create(pmConfig);
 }();
-
-// base url for all E-Utilities requests
-const eUtilsBaseUrl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/';
 
 let errorOf = (description) => {
   return {error: description};
@@ -120,56 +115,17 @@ let pubMedApi = {
     },
 
     fetchResultDetail: function (pmId, callback) {
-        let uri = `${eUtilsBaseUrl}efetch.fcgi?db=pubmed&id=${pmId}&retmode=xml`;
-        console.log(`fetching details for pmid ${pmId} at ${uri}`);
-        httpRequest(uri, null, (err, response, body) => {
 
-            let result = {};
+        const options = {
+            db: 'pubmed'
+        };
 
-            if (err) {
-                console.log(`error fetching details for ${pmId}`, err);
-                result.error = "failed to get publication details";
-                return;
-            }
-
-            // extract the abstracts from result details
-            xmlSimple.parse(body, (err, parsed) => {
-                if (err) {
-                    console.log(`failed to parse ${err}`);
-                    result = errorOf("unable to parse publication details");
-                    return;
-                }
-
-                try {
-
-                    let abstract = parsed
-                         .PubmedArticle
-                         .MedlineCitation
-                         .Article
-                         .Abstract
-                         .AbstractText;
-
-                    // The abstract can be an array of sections...
-                    if (Array.isArray(abstract)) {
-                         abstract.forEach((abstractTxt) => {
-                             result[abstractTxt['@'].Label.toLowerCase()] = abstractTxt['#'];
-                         });
-                    // or an object...
-                    } else if (abstract && typeof abstract === 'object'){
-                        result["abstract"] = abstract['#'];
-                    // or plain text
-                    } else {
-                        result["abstract"] = abstract;
-                    }
-                }
-                catch(e) {
-                    console.log(`error extracting the abstract's text from the document ${e}`);
-                    result.error = "unexpected document format";
-                }
+        pmSvc.fetchArticleDetails(pmId, options)
+            .then(results => callback(results))
+            .catch(err => {
+                console.log(`unable to get abstract for PMID ${pmId}`, err);
+                return errorOf(`Unable to display abstract for PMID ${pmId}.`);
             });
-
-            callback(result);
-        });
     }
 };
 
