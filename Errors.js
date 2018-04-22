@@ -24,7 +24,7 @@ class AppError extends Error {
 
 class EmptySearchResultError extends AppError {
     constructor(query) {
-        super(ErrorSeverity.Info, `No results found for "${query}. Please try another query"`);
+        super(ErrorSeverity.Info, `No results found for "${query}". Please try another query`);
     }
 }
 

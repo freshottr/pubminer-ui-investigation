@@ -2,6 +2,7 @@
 
 const http = require('request-promise');
 const DocHelper = require('../DocumentHelper');
+const QueryHelper = require('../QueryHelper');
 const Errors = require('../Errors');
 
 /**
@@ -24,17 +25,17 @@ class PubMedService {
      * `webenv` and `querykey` for subsequent (summary) requests. It also
      * includes the total number of results.
      *
-     * @param query the query string as entered by the user
+     * @param queryTerms And Array of terms to query
      * @param options additional query parameters to be included with the request
      * @return
      */
-    search(query, options) {
+    search(queryTerms, options) {
 
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
             qs: Object.assign({
-                term: query,
+                term: QueryHelper.combineSearchTerms(queryTerms),
                 retmode: 'json',
                 usehistory: 'y',
             }, options)
@@ -44,10 +45,10 @@ class PubMedService {
             // E-search
             .client(searchOptions)
             .then(response => {
-                const searchResult = DocHelper.extractSearchResults(response, query);
-                console.log(`esearch found ${searchResult.itemsFound} for ${query}`);
+                const searchResult = DocHelper.extractSearchResults(response, queryTerms[0]);
+                console.log(`esearch found ${searchResult.itemsFound} for ${queryTerms[0]}`);
                 if (searchResult.itemsFound === "0") {
-                    throw new Errors.EmptySearchResultError(query);
+                    throw new Errors.EmptySearchResultError(queryTerms[0]);
                 }
                 return searchResult;
             })
