@@ -9,7 +9,7 @@ const pmSvc = require('../services/PubMedService').create(pubMedConfig);
 
 describe('PubMedService', function() {
     describe('search', function () {
-       it('should return results for a search term', function () {
+       it('returns results for a search term', function () {
            const pubMedSearchResponse = require('./data/search/pubmed_search_success.json');
            const searchTerm = 'zika';
            const queryOptions = {
@@ -53,7 +53,7 @@ describe('PubMedService', function() {
     });
 
     describe('fetchSummary', function () {
-        it('should return summary results', function () {
+        it('returns summary results', function () {
             const pubMedSummaryResponse = require('./data/summary/pubmed-esummary-success');
 
             const environment = {

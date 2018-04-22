@@ -7,12 +7,12 @@ const pubMedConfig = config.get('PubMedService');
 describe('Configuration', function() {
 
     describe('PubMedService', function () {
-        it('should define a valid baseUri', function () {
+        it('defines a valid baseUri', function () {
             assert.equal(pubMedConfig.baseUri,
                 "https://eutils.ncbi.nlm.nih.gov");
         });
 
-        it('should define a database', function (done) {
+        it('defines a database', function (done) {
             if(pubMedConfig.db) {
                 done();
             } else {
