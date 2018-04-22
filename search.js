@@ -85,24 +85,8 @@ let pubMedApi = {
                 demoSvc
                     .getDemographicDetailsForIds(summaryResults.result.uids)
                     .then(demoDetails => {
-                        const linkedIds = DocumentHelper
-                            .getLinkedIdsByType(summaryResults, 'pmid', x => x);
-                        return summaryResults
-                            .result
-                            .uids
-                            .map(resultItem => {
-                                let item = summaryResults.result[resultItem];
-                                if (demoDetails[resultItem]) {
-                                    // TODO: copy the whole object instead of each attribute
-                                    // e.g. item.dd = demoDetails[resultItem];
-                                    for (let att in demoDetails[resultItem]) {
-                                        item[att] = demoDetails[resultItem][att];
-                                    }
-                                }
-                                //overwrite the uid with the pmid
-                                item.uid = linkedIds[item.uid];
-                                return item;
-                            });
+                        return DocumentHelper
+                            .mergeDemographicAndSummaryResults(demoDetails, summaryResults);
                     })
                     .then(mergedData => {
                         callback({items: mergedData})
