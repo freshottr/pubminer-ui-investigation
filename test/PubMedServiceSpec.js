@@ -26,7 +26,7 @@ describe('PubMedService', function() {
                }, queryOptions))
                .reply(200, pubMedSearchResponse);
 
-           const response = pmSvc.search(searchTerm, queryOptions);
+           const response = pmSvc.search([searchTerm], queryOptions);
 
            return response.then( result => {
 
