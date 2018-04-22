@@ -36,14 +36,14 @@ let pubMedApi = {
             callback({searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []});
         } else {
 
-            const query = QueryHelper.combineSearchTerms([
+            const queryTerms = [
                 searchTerm,
                 config.get('PubMedService').searchFilter,
                 QueryHelper.getDateFilter(pubDateFilter)
-            ]);
+            ];
 
-            console.log(`calling esearch for ${query}...`);
-            pmSvc.search(query, {
+            console.log(`calling esearch for ${searchTerm}...`);
+            pmSvc.search(queryTerms, {
                 db: 'pubmed',
             }).then(results => {
                 console.log(`calling elink...`);
@@ -57,7 +57,7 @@ let pubMedApi = {
                 });
             }).then(linkResults => {
                 console.log(`calling pmc esearch for open access articles...`);
-                return pmSvc.search('open access[filter]', {
+                return pmSvc.search(['open access[filter]'], {
                     query_key: linkResults.querykey,
                     WebEnv: linkResults.webenv
                 });
