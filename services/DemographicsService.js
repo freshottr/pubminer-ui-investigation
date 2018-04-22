@@ -52,7 +52,7 @@ class DemographicsService {
                         pmid: item.pmid,
                         table1: item.table1,
                         sentences: item.sentences,
-                        date_process: item.date_processed
+                        dateProcessed: item.date_processed
                     };
                     return acc;
                 }, {});

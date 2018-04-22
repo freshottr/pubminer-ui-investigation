@@ -47,7 +47,7 @@ class DocumentHelper {
 
 
     /**
-     * Merges the demographic data and esummary data
+     * Merges the demographic data and esummary data into a PubMiner summary result
      * @param demoDetails a map of demographic details including sentences and tables
      * @param summaryResults results as returned by NCBI's esummary API
      */
@@ -59,17 +59,13 @@ class DocumentHelper {
             .result
             .uids
             .map(resultItem => {
-                let item = summaryResults.result[resultItem];
-                if (demoDetails[resultItem]) {
-                    // TODO: copy the whole object instead of each attribute
-                    // e.g. item.dd = demoDetails[resultItem];
-                    for (let att in demoDetails[resultItem]) {
-                        item[att] = demoDetails[resultItem][att];
-                    }
-                }
-                //overwrite the uid with the pmid
-                item.uid = linkedIds[item.uid];
-                return item;
+                const summaryItem = summaryResults.result[resultItem];
+                return Object.assign({
+                    uid: linkedIds[summaryItem.uid], //change uid from PMC to PMID
+                    title: summaryItem.title,
+                    authors: summaryItem.authors,
+                    pubdate: summaryItem.pubdate
+                }, demoDetails[resultItem] || {});
             });
     }
 
