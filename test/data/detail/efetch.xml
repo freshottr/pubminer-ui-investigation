@@ -1,0 +1,100 @@
+<?xml version="1.0" ?>
+<!DOCTYPE PubmedArticleSet PUBLIC "-//NLM//DTD PubMedArticle, 1st January 2018//EN" "https://dtd.nlm.nih.gov/ncbi/pubmed/out/pubmed_180101.dtd">
+<PubmedArticleSet>
+    <PubmedArticle>
+        <MedlineCitation Status="In-Data-Review" Owner="NLM">
+            <PMID Version="1">29632288</PMID>
+            <DateRevised>
+                <Year>2018</Year>
+                <Month>04</Month>
+                <Day>10</Day>
+            </DateRevised>
+            <Article PubModel="Print">
+                <Journal>
+                    <ISSN IssnType="Print">1881-6096</ISSN>
+                    <JournalIssue CitedMedium="Print">
+                        <Volume>70</Volume>
+                        <Issue>4</Issue>
+                        <PubDate>
+                            <Year>2018</Year>
+                            <Month>Apr</Month>
+                        </PubDate>
+                    </JournalIssue>
+                    <Title>Brain and nerve = Shinkei kenkyu no shinpo</Title>
+                    <ISOAbbreviation>Brain Nerve</ISOAbbreviation>
+                </Journal>
+                <ArticleTitle>[A New Aspect of Anti-Glycolipid Antibodies in Guillain-Barré Syndrome: Ca&lt;sup&gt;2+&lt;/sup&gt;-Dependent Antibody in Fisher Syndrome-Related Disorders].</ArticleTitle>
+                <Pagination>
+                    <MedlinePgn>405-417</MedlinePgn>
+                </Pagination>
+                <ELocationID EIdType="doi" ValidYN="Y">10.11477/mf.1416201013</ELocationID>
+                <Abstract>
+                    <AbstractText>Anti-glycolipid antibodies are key to revealing the pathomechanisms</AbstractText>
+                </Abstract>
+                <AuthorList CompleteYN="Y">
+                    <Author ValidYN="Y">
+                        <LastName>Chiba</LastName>
+                        <ForeName>Atsuro</ForeName>
+                        <Initials>A</Initials>
+                        <AffiliationInfo>
+                            <Affiliation>Department of Neurrology, School of Medicine, Kyorin University.</Affiliation>
+                        </AffiliationInfo>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Uchibori</LastName>
+                        <ForeName>Ayumi</ForeName>
+                        <Initials>A</Initials>
+                    </Author>
+                    <Author ValidYN="Y">
+                        <LastName>Gyohda</LastName>
+                        <ForeName>Atsuko</ForeName>
+                        <Initials>A</Initials>
+                    </Author>
+                </AuthorList>
+                <Language>jpn</Language>
+                <PublicationTypeList>
+                    <PublicationType UI="D004740">English Abstract</PublicationType>
+                    <PublicationType UI="D016428">Journal Article</PublicationType>
+                </PublicationTypeList>
+            </Article>
+            <MedlineJournalInfo>
+                <Country>Japan</Country>
+                <MedlineTA>Brain Nerve</MedlineTA>
+                <NlmUniqueID>101299709</NlmUniqueID>
+                <ISSNLinking>1881-6096</ISSNLinking>
+            </MedlineJournalInfo>
+        </MedlineCitation>
+        <PubmedData>
+            <History>
+                <PubMedPubDate PubStatus="entrez">
+                    <Year>2018</Year>
+                    <Month>4</Month>
+                    <Day>11</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="pubmed">
+                    <Year>2018</Year>
+                    <Month>4</Month>
+                    <Day>11</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+                <PubMedPubDate PubStatus="medline">
+                    <Year>2018</Year>
+                    <Month>4</Month>
+                    <Day>11</Day>
+                    <Hour>6</Hour>
+                    <Minute>0</Minute>
+                </PubMedPubDate>
+            </History>
+            <PublicationStatus>ppublish</PublicationStatus>
+            <ArticleIdList>
+                <ArticleId IdType="pubmed">29632288</ArticleId>
+                <ArticleId IdType="pii">1416201013</ArticleId>
+                <ArticleId IdType="doi">10.11477/mf.1416201013</ArticleId>
+            </ArticleIdList>
+        </PubmedData>
+    </PubmedArticle>
+
+</PubmedArticleSet>

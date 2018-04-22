@@ -9,15 +9,23 @@ router.get('/', (request, response) => {
     // search PubMed for results matching the search terms
     pubMedQuery.search(request.query, (queryResult) => {
 
-        if (queryResult.itemsFound === 0) {
-            // Render the 'results' view
-            response.render('results', {"results": {items: []},
-                                        "qryResult": queryResult});
+        if (queryResult.error || queryResult.itemsFound === 0) {
+            console.log(`results.js error or empty: ${JSON.stringify(queryResult)}`);
+            const errResponse = {
+                results: {
+                    items: []
+                },
+                qryResult: queryResult,
+                error: queryResult.error
+            };
+
+            response.render('results', errResponse);
         } else {
             // Get summaries for the first set of result rows
             console.log(`results.js calling getSummaries ${JSON.stringify(queryResult)}`);
             pubMedQuery.getSummaries(queryResult.webenv, queryResult.querykey, 0, rowRequestSize, (results) => {
 
+                console.log(`results.js rending template ${JSON.stringify(results)}`);
                 // Render the 'results' view using query results
                 response.render('results', {"results": results,
                                             "qryResult": queryResult});
