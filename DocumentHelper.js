@@ -47,7 +47,8 @@ class DocumentHelper {
 
 
     /**
-     * Merges the demographic data and esummary data into a PubMiner summary result
+     * Merges the demographic data and esummary data from the PCM data into a PubMiner
+     * summary result
      * @param demoDetails a map of demographic details including sentences and tables
      * @param summaryResults results as returned by NCBI's esummary API
      */
@@ -64,7 +65,9 @@ class DocumentHelper {
                     uid: linkedIds[summaryItem.uid], //change uid from PMC to PMID
                     title: summaryItem.title,
                     authors: summaryItem.authors,
-                    pubdate: summaryItem.pubdate
+                    pubdate: summaryItem.pubdate,
+                    pmid: linkedIds[summaryItem.uid],
+                    pmcid: summaryItem.uid
                 }, demoDetails[resultItem] || {});
             });
     }
