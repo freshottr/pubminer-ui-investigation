@@ -2,11 +2,11 @@ let express = require("express");
 let router = express.Router();
 let pubMedQuery = require('../search');
 
-router.get('/:pmcId', (request, response) => {
+router.get('/:pmid', (request, response) => {
 
-    let pmcId = request.params["pmcId"]
+    let pmid = request.params["pmid"]
 
-    pubMedQuery.fetchResultDetail(pmcId, (details) => {
+    pubMedQuery.fetchResultDetail(pmid, (details) => {
         response.render('abstractSections', {"data": details});
     });
 });
