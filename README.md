@@ -1,23 +1,45 @@
 # PubMiner
 
 ### Running PubMiner Locally
-#### Install Required Software and Tools 
+#### Install Required Software and Tools
  - Install `Node.js®` and `npm` (node package manager). The installer at [nodejs.org](https://nodejs.org) will handle both of those for you
  - Install Bower globally `npm install -g bower`
  - Install the gulp command line tools globally `npm install -g gulp-cli`
- 
+
 #### Install and Build Application Dependencies
- - Ensure you are in the project directory 
+ - Clone the source code repository: `git clone <url> <project directory name>`
+ - Ensure you are in the project directory
  - Run `npm install` to install the server-side dependencies (`express`, `pug`, `xml-simple`, etc.)
  - Run `bower install` to install client-side dependencies (`PatternFly`, `jQuery`)
  - Run `gulp` to build `pmstyles.css` and automatically have it copied to the `public/css` folder
-  
+
 #### Start the Application
  - Ensure you are in the project directory
  - Run `npm start` to start the server on port `8081`
-    - If you'd like to change the port to something different, you can modify the `bin\www` file 
+    - If you'd like to change the port to something different, you can modify the `bin\www` file
     - To start in development mode, run `npm run start-dev` instead. In development mode, source changes are detected and the server automatically restarts. Also, the browser developer tools will display a Node.js icon that will allow you to debug server side code
  - In your browser, navigate to [http://localhost:8081](http://localhost:8081)
+
+### Running PubMiner in the Cloud
+#### Setup
+ - Create a new virtual machine for the application on the cloud provider of choice (e.g. AWS, Digital Ocean). Details vary by provider.
+ - Connect to a terminal window for the virtual machine.
+ - Follow the steps "Required Software and Tools" and "Install and Build Application Dependencies" above.
+ - Install Forever globally `npm install -g forever`.  Forever will start an application and automatically restart an application that has crashed.
+
+#### Start the Application
+ - Connect to a terminal window for the virtual machine.
+ - Start the application using Forever: `forever start ./bin/www`
+ - View the details using: `forever list`. This will show the uid, log file location, and uptime.
+
+#### Update the Running Code
+ - Connect to a terminal window for the virtual machine.
+ - Find the uid assigned to the application: `forever list`
+ - Stop the application: `forever stop <uid>`
+ - Refresh the source code from GitHub: `git pull origin master`
+ - Generate the .css: `gulp`
+ - Start the application: `forever start ./bin/www`
+
 
 ### Additional Information
 #### Running Integration Tests with Cyprus
