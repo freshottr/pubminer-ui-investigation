@@ -89,7 +89,8 @@ $(document).ready(function() {
     // Click handler for Export button
     $("#exportMenuItem").click(function(){
         if ($("input.uid:checked").length > 0) {
-            var idsToExport = '"pmid","pmcid","title","sentences","table1"';
+            var searchTerm = $("#termSearched").val();
+            var idsToExport = `"search term","pmid","pmcid","title","sentences","table1"`;
             $("input.uid:checked").each(function(){
                 let id = $(this).val();
                 let pmcid = $(this).closest(".list-group-item").find("input.pmcid").val();
@@ -99,7 +100,7 @@ $(document).ready(function() {
                 let title = $(this).closest(".list-group-item-header").find(".article-title").text();
                 let sentences = $(this).closest(".list-group-item").find(".demo-sentence-section").length > 0 ? "Yes" : "No";
                 let table1 = $(this).closest(".list-group-item").find(".pm-table1").length > 0 ? "Yes" : "No";
-                idsToExport += `,\n${id},${pmcid},"${title}",${sentences},${table1}`;
+                idsToExport += `,\n"${searchTerm}",${id},${pmcid},"${title}",${sentences},${table1}`;
                 $(this).prop('checked', false);
             });
 
