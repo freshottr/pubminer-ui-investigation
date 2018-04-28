@@ -166,6 +166,21 @@ class DocumentHelper {
         });
     }
 
+    static groupSentencesBySection(sentences) {
+        const groupedSentences = sentences
+            .reduce((acc, s) => {
+                acc[s.section] = (acc[s.section] || []);
+                acc[s.section].push(s.text);
+                return acc;
+            }, {});
+
+        return Object
+            .keys(groupedSentences)
+            .reduce((acc, sec) => {
+                acc.push({section: sec, sentences: groupedSentences[sec]});
+                return acc;
+            }, []);
+    }
 }
 
 module.exports = DocumentHelper;

@@ -54,6 +54,67 @@ describe('DocumentHelper', function () {
 
     });
 
+    describe('.groupSentencesBySection', function () {
+
+        it('handles empty arrays', function () {
+            const grouped = DocHelper.groupSentencesBySection([]);
+            assert.strictEqual(grouped.length, 0);
+        });
+
+        it('keeps stable order of grouped sections', function () {
+            const sections = [1, 2, 1, 3, 2, 4].map(x => 'sec' + x);
+            const texts = sections.map((sec, idx) => `text ${idx} for ${sec}`);
+            const sentences = sections.map((s, idx) => {
+               return {
+                   section: s,
+                   text: texts[idx]
+               }
+            });
+
+            const grouped = DocHelper.groupSentencesBySection(sentences);
+            assert.strictEqual(grouped.length, 4);
+            assert.strictEqual(grouped[0].sentences.length, 2);
+            assert.strictEqual(grouped[1].sentences.length, 2);
+            assert.strictEqual(grouped[2].sentences.length, 1);
+            assert.strictEqual(grouped[3].sentences.length, 1);
+        });
+
+        it('keeps a stable ordering of sentences', function () {
+            const sections = [1, 2, 1, 3, 2, 4].map(x => 'sec' + x);
+            const texts = sections.map((sec, idx) => `text ${idx} for ${sec}`);
+            const sentences = sections.map((s, idx) => {
+                return {
+                    section: s,
+                    text: texts[idx]
+                }
+            });
+
+            const grouped = DocHelper.groupSentencesBySection(sentences);
+            assert.strictEqual(grouped.length, 4);
+
+            const sec1Sentences = grouped[0].sentences;
+
+            var lastIdx = -1;
+            sec1Sentences.forEach(sentence => {
+                let idx = texts.indexOf(sentence);
+                console.log(`checking idx ${idx}`);
+                assert.strictEqual(idx > lastIdx, true);
+                lastIdx = idx;
+            });
+
+            const sec2Sentences = grouped[1].sentences;
+            var lastIdx = -1;
+            sec2Sentences.forEach(sentence => {
+                let idx = texts.indexOf(sentence);
+                console.log(`checking idx ${idx}`);
+                assert.strictEqual(idx > lastIdx, true);
+                lastIdx = idx;
+            });
+        });
+
+
+    });
+
 
     //TODO: add tests for other `DocumentHelper` methods
 
