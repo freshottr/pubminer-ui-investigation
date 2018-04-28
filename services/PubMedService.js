@@ -29,7 +29,7 @@ class PubMedService {
      * @param options additional query parameters to be included with the request
      * @return
      */
-    search(queryTerms, options) {
+    search(queryTerms, options, userSearchTerm) {
 
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
@@ -48,7 +48,7 @@ class PubMedService {
                 const searchResult = DocHelper.extractSearchResults(response, queryTerms[0]);
                 console.log(`esearch found ${searchResult.itemsFound} for ${queryTerms[0]}`);
                 if (searchResult.itemsFound === "0") {
-                    throw new Errors.EmptySearchResultError(queryTerms[0]);
+                    throw new Errors.EmptySearchResultError(userSearchTerm || queryTerms[0]);
                 }
                 return searchResult;
             })
@@ -70,7 +70,7 @@ class PubMedService {
             .then(response => {
                 console.log(`processing elink result`);
                 return DocHelper
-                    .extractEnvironmentFromLinkResults(response);
+                    .extractEnvironmentFromLinkResults(response, options.querykey);
             })
     }
 
