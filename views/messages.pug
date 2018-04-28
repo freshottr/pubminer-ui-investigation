@@ -7,10 +7,9 @@
         severity - severity to include in this block
         alertclass - alert class to apply to all messages in this section
         iconclass - icon class to apply to all messages in this section
-mixin pf-message-section(messages, severity, alertclass, iconclass)
-    each msg, sev in messages
-        if (sev == severity)
-            +pf-message(msg)(alert=['alert',alertclass], icon=['pficon', iconclass])
+mixin pf-message-section(message, severity, alertclass, iconclass)
+    if (message.severity === severity)
+        +pf-message(message.msg)(alert=['alert',alertclass], icon=['pficon', iconclass])
 
 //- pf-message: Display a single message and apply appropriate classes.
         text - message text to display
@@ -24,13 +23,13 @@ mixin pf-message(text)
 
 div(class="pm-message-area")
     //- Error
-    +pf-message-section(error, '0', 'alert-danger', 'pficon-error-circle-o')
+    +pf-message-section(error, 0, 'alert-danger', 'pficon-error-circle-o')
 
     //- Warning
-    +pf-message-section(error, '1', 'alert-warning', 'pficon-warning-triangle-o')
+    +pf-message-section(error, 1, 'alert-warning', 'pficon-warning-triangle-o')
 
     //- Info
-    +pf-message-section(error, '2', 'alert-info', 'pficon-info')
+    +pf-message-section(error, 2, 'alert-info', 'pficon-info')
 
     //- Success
-    +pf-message-section(error, '3', 'alert-success', 'pficon-ok')
+    +pf-message-section(error, 3, 'alert-success', 'pficon-ok')
