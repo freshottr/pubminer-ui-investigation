@@ -40,7 +40,7 @@ let pubMedApi = {
             console.log(`calling esearch for ${searchTerm}...`);
             pmSvc.search(queryTerms, {
                 db: 'pubmed',
-            }).then(results => {
+            }, searchTerm).then(results => {
                 console.log(`calling elink...`);
                 return pmSvc.link({
                     db: 'pmc',
@@ -52,10 +52,12 @@ let pubMedApi = {
                 });
             }).then(linkResults => {
                 console.log(`calling pmc esearch for open access articles...`);
-                return pmSvc.search(['open access[filter]'], {
-                    query_key: linkResults.querykey,
-                    WebEnv: linkResults.webenv
-                });
+                return pmSvc
+                    .search(['open access[filter]'], {
+                            query_key: linkResults.querykey,
+                            WebEnv: linkResults.webenv
+                        },
+                        searchTerm);
             }).then(pmcSearchResults => {
                 //Override the search term
                 pmcSearchResults.searchTerm = searchTerm;

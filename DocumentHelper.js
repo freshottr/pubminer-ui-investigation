@@ -92,13 +92,23 @@ class DocumentHelper {
         }
     }
 
-    static extractEnvironmentFromLinkResults(linkDocument) {
+    static extractEnvironmentFromLinkResults(linkDocument, previousQueryKey) {
         try {
             const lnkSet = linkDocument.linksets[0];
-            return {
-                webenv: lnkSet.webenv,
-                querykey: lnkSet.linksetdbhistories[0].querykey
+            if (lnkSet.linksetdbhistories) {
+                return {
+                    webenv: lnkSet.webenv,
+                    querykey: lnkSet.linksetdbhistories[0].querykey
+                };
+            } else {
+                // In this case, the result set of the eLink matches that of the
+                // esearch and a new query-key is not generated
+                return {
+                    webenv: lnkSet.webenv,
+                    querykey: previousQueryKey
+                };
             }
+
         } catch (err) {
             console.error(`error extract env from link result`, err);
             throw new Errors.InvalidDocumentFormatError(err);
