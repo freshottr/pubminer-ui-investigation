@@ -12,11 +12,10 @@ router.get('/', (request, response) => {
         if (queryResult.error || queryResult.itemsFound === 0) {
             console.log(`results.js error or empty: ${JSON.stringify(queryResult)}`);
             const errResponse = {
-                results: {
-                    items: []
-                },
-                qryResult: queryResult,
-                error: [queryResult.error] //TODO Can we make queryResult.error an array?
+                error: {
+                    msg: queryResult.error,
+                    severity: queryResult.severity
+                }
             };
 
             response.render('results', errResponse);
