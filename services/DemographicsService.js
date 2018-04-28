@@ -1,6 +1,7 @@
 "use strict";
 
 const AWS = require('aws-sdk');
+const DocHelper = require('../DocumentHelper');
 
 /**
  * Provides services for fetching demographic details for pubmed IDs
@@ -51,7 +52,13 @@ class DemographicsService {
                         pmcid: item.pmcid,
                         pmid: item.pmid,
                         table1: item.table1,
-                        sentences: item.sentences,
+                        sentences: DocHelper
+                            .groupSentencesBySection(item.sentences)
+                            .map(sec => {
+                                return {
+                                    section: sec.section,
+                                    text: sec.sentences.join(' ')}
+                            }),
                         dateProcessed: item.date_processed
                     };
                     return acc;
