@@ -41,6 +41,7 @@ class PubMedService {
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
+            timeout: this.config.esearchTimeout,
             qs: Object.assign({
                 term: QueryHelper.combineSearchTerms(queryTerms),
                 retmode: 'json',
@@ -69,6 +70,7 @@ class PubMedService {
         const linkOptions = {
             uri: `${this.config.baseUri}${this.config.elinkPath}`,
             json: true,
+            timeout: this.config.elinkTimeout,
             qs: Object.assign({
                 retmode: 'json',
                 usehistory: 'y',
@@ -94,6 +96,7 @@ class PubMedService {
         const summaryOptions = {
             uri: `${this.config.baseUri}${this.config.summaryPath}`,
             json: true,
+            timeout: this.config.defaultTimeout,
             qs: {
                 // TODO: use the API key in the query parameters
                 db: this.config.db,
@@ -124,6 +127,7 @@ class PubMedService {
         const fetchOptions = {
             uri: `${this.config.baseUri}${this.config.efetchPath}`,
             json: true,
+            timeout: this.config.defaultTimeout,
             qs: Object.assign({
                 retmode: 'xml',
                 id: articleId
