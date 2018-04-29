@@ -1,6 +1,11 @@
 "use strict";
 
 class ErrorSeverity {
+
+    static get Success() {
+        return 3;
+    }
+
     static get Info() {
         return 2;
     }
@@ -48,6 +53,7 @@ class InvalidDocumentFormatError extends AppError {
 }
 
 module.exports = {
+    AppError: AppError,
     EmptySearchResultError: EmptySearchResultError,
     TooManyResultsError: TooManyResultsError,
     InvalidQueryStringError: InvalidQueryStringError,

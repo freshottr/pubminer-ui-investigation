@@ -24,7 +24,7 @@ each item in results.items
                         div(class="list-view-pf-additional-info-item")
                             span(class="fa fa-list abstract-icon")
                             span(class="icon-text") Abstract
-                        if item.sentences
+                        if item.sentences && item.sentences.length > 0
                             div(class="list-view-pf-additional-info-item")
                                 span(class="pficon pficon-users sentence-icon")
                                 span(class="icon-text") Sentences
