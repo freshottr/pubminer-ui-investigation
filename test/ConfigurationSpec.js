@@ -6,7 +6,7 @@ const pubMedConfig = config.get('PubMedService');
 
 describe('Configuration', function() {
 
-    describe('PubMedService', function () {
+    describe('PubMedService Configuration', function () {
         it('defines a valid baseUri', function () {
             assert.equal(pubMedConfig.baseUri,
                 "https://eutils.ncbi.nlm.nih.gov");

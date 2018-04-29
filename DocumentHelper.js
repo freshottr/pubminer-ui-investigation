@@ -38,8 +38,8 @@ class DocumentHelper {
     static searchErrorResponse(query, error) {
         return {
             searchTerm: query,
-            itemsFound: "0",
-            itemsReturned: "0",
+            itemsFound: 0,
+            itemsReturned: 0,
             error: error.message || 'An unexpected error occurred. Please try again.',
             severity: error.severity || Errors.Severity.Danger
         };
@@ -83,8 +83,8 @@ class DocumentHelper {
                 webenv: searchDocument.esearchresult.webenv,
                 querykey: searchDocument.esearchresult.querykey,
                 searchTerm: query,
-                itemsFound: searchDocument.esearchresult.count,
-                itemsReturned: searchDocument.esearchresult.retmax
+                itemsFound: parseInt(searchDocument.esearchresult.count),
+                itemsReturned: parseInt(searchDocument.esearchresult.retmax)
             };
         } catch (err) {
             console.error(`error extracting search results`, err);

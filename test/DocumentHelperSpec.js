@@ -97,7 +97,6 @@ describe('DocumentHelper', function () {
             var lastIdx = -1;
             sec1Sentences.forEach(sentence => {
                 let idx = texts.indexOf(sentence);
-                console.log(`checking idx ${idx}`);
                 assert.strictEqual(idx > lastIdx, true);
                 lastIdx = idx;
             });
@@ -106,7 +105,6 @@ describe('DocumentHelper', function () {
             var lastIdx = -1;
             sec2Sentences.forEach(sentence => {
                 let idx = texts.indexOf(sentence);
-                console.log(`checking idx ${idx}`);
                 assert.strictEqual(idx > lastIdx, true);
                 lastIdx = idx;
             });

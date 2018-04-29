@@ -31,6 +31,8 @@ class PubMedService {
      */
     search(queryTerms, options, userSearchTerm) {
 
+        userSearchTerm = userSearchTerm || queryTerms[0];
+
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
@@ -47,8 +49,11 @@ class PubMedService {
             .then(response => {
                 const searchResult = DocHelper.extractSearchResults(response, queryTerms[0]);
                 console.log(`esearch found ${searchResult.itemsFound} for ${queryTerms[0]}`);
-                if (searchResult.itemsFound === "0") {
-                    throw new Errors.EmptySearchResultError(userSearchTerm || queryTerms[0]);
+                if (searchResult.itemsFound === 0) {
+                    throw new Errors.EmptySearchResultError(userSearchTerm);
+                }
+                if (searchResult.itemsFound > this.config.resultsLimit) {
+                    throw new Errors.TooManyResultsError(userSearchTerm, this.config.resultsLimit);
                 }
                 return searchResult;
             })

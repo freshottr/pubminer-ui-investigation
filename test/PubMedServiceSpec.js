@@ -5,54 +5,101 @@ const config = require('config');
 const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
 const pmSvc = require('../services/PubMedService').create(pubMedConfig);
+const Errors = require('../Errors');
 
 
-describe('PubMedService', function() {
-    describe('search', function () {
-       it('returns results for a search term', function () {
-           const pubMedSearchResponse = require('./data/search/pubmed_search_success.json');
-           const searchTerm = 'zika';
-           const queryOptions = {
-               db: 'pubmed'
-           };
+describe('PubMedService', function () {
 
-           //Define the expected e-utils call
-           const pmMock = nock(`${pubMedConfig.baseUri}`)
-               .get(`${pubMedConfig.searchPath}`)
-               .query(Object.assign({
-                   retmode: "json",
-                   usehistory: "y",
-                   term: searchTerm
-               }, queryOptions))
-               .reply(200, pubMedSearchResponse);
+    describe('.search', function () {
 
-           const response = pmSvc.search([searchTerm], queryOptions);
+        function mockSearchResponse(searchTerm, queryOptions, mockData, status) {
+            status = status || 200;
+            nock(`${pubMedConfig.baseUri}`)
+                .get(`${pubMedConfig.searchPath}`)
+                .query(Object.assign({
+                    retmode: "json",
+                    usehistory: "y",
+                    term: searchTerm
+                }, queryOptions))
+                .reply(status, mockData);
+        }
 
-           return response.then( result => {
 
-               assert.equal(
-                   result.webenv,
-                   pubMedSearchResponse.esearchresult.webenv);
+        it('returns results for a search term', function () {
+            const pubMedSearchResponse = require('./data/search/pubmed_search_success.json');
+            const searchTerm = 'zika';
+            const queryOptions = {
+                db: 'pubmed'
+            };
 
-               assert.equal(
-                   result.querykey,
-                   pubMedSearchResponse.esearchresult.querykey);
+            mockSearchResponse(searchTerm, queryOptions, pubMedSearchResponse);
 
-               assert.equal(
-                   result.searchTerm,
-                   searchTerm);
+            const response = pmSvc.search([searchTerm], queryOptions);
 
-               assert.equal(result.itemsFound,
-                   pubMedSearchResponse.esearchresult.count);
+            return response.then(result => {
 
-               assert.equal(result.itemsReturned,
-                   pubMedSearchResponse.esearchresult.retmax);
+                assert.equal(
+                    result.webenv,
+                    pubMedSearchResponse.esearchresult.webenv);
 
-           });
-       });
+                assert.equal(
+                    result.querykey,
+                    pubMedSearchResponse.esearchresult.querykey);
+
+                assert.equal(
+                    result.searchTerm,
+                    searchTerm);
+
+                assert.equal(result.itemsFound,
+                    pubMedSearchResponse.esearchresult.count);
+
+                assert.equal(result.itemsReturned,
+                    pubMedSearchResponse.esearchresult.retmax);
+
+            });
+        });
+
+        it('returns an EmptySearchResultError for 0 items returned', function (done) {
+            const pubMedSearchResponse = require('./data/search/pubmed_search_zero_results.json');
+            const searchTerm = 'zika';
+            const queryOptions = {
+                db: 'pubmed'
+            };
+
+            mockSearchResponse(searchTerm, queryOptions, pubMedSearchResponse);
+
+            const response = pmSvc.search([searchTerm], queryOptions);
+
+            response.then(x => {
+                assert.fail(x, "", "expected failed Promise");
+            }).catch(err => {
+                assert.strictEqual(err.constructor.name,
+                    'EmptySearchResultError');
+                done();
+            });
+        });
+
+        it('returns a TooManyResultsError for more than `resultsLimit items returned', function () {
+            const pubMedSearchResponse = require('./data/search/pubmed_search_too_many_results.json');
+            const searchTerm = 'zika';
+            const queryOptions = {
+                db: 'pubmed'
+            };
+
+            mockSearchResponse(searchTerm, queryOptions, pubMedSearchResponse);
+
+            const response = pmSvc.search([searchTerm], queryOptions);
+
+            return response.then(x => {
+                assert.fail(x, "", "expected failed Promise");
+            }).catch(err => {
+                assert.strictEqual(err.constructor.name,
+                    'TooManyResultsError');;
+            });
+        });
     });
 
-    describe('fetchSummary', function () {
+    describe('.fetchSummary', function () {
         it('returns summary results', function () {
             const pubMedSummaryResponse = require('./data/summary/pubmed-esummary-success');
 
