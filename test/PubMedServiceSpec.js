@@ -68,7 +68,7 @@ describe('PubMedService', function () {
 
             mockSearchResponse(searchTerm, queryOptions, pubMedSearchResponse);
 
-            const response = pmSvc.search([searchTerm], queryOptions);
+            const response = pmSvc.search([searchTerm], queryOptions, searchTerm);
 
             response.then(x => {
                 assert.fail(x, "", "expected failed Promise");
@@ -79,7 +79,7 @@ describe('PubMedService', function () {
             });
         });
 
-        it('returns a TooManyResultsError for more than `resultsLimit items returned', function () {
+        it('returns a TooManyResultsError for more than `resultsLimit` items returned', function () {
             const pubMedSearchResponse = require('./data/search/pubmed_search_too_many_results.json');
             const searchTerm = 'zika';
             const queryOptions = {
@@ -88,7 +88,7 @@ describe('PubMedService', function () {
 
             mockSearchResponse(searchTerm, queryOptions, pubMedSearchResponse);
 
-            const response = pmSvc.search([searchTerm], queryOptions);
+            const response = pmSvc.search([searchTerm], queryOptions, searchTerm);
 
             return response.then(x => {
                 assert.fail(x, "", "expected failed Promise");
@@ -97,6 +97,44 @@ describe('PubMedService', function () {
                     'TooManyResultsError');;
             });
         });
+
+        it('returns InvalidQueryStringError for an empty query string', function () {
+            const searchTerm = '';
+            const response = pmSvc.search([searchTerm], {});
+
+            return response.then(x => {
+                assert.fail(x, "", "expected failed Promise");
+            }).catch(err => {
+                assert.strictEqual(err.constructor.name,
+                    'InvalidQueryStringError');
+            });
+        });
+
+
+        it('returns InvalidQueryStringError for an undefined query string', function () {
+            const searchTerm = null;
+            const response = pmSvc.search([searchTerm], {});
+
+            return response.then(x => {
+                assert.fail(x, "", "expected failed Promise");
+            }).catch(err => {
+                assert.strictEqual(err.constructor.name,
+                    'InvalidQueryStringError');
+            });
+        });
+
+        it('returns InvalidQueryStringError for an whitespace query string', function () {
+            const searchTerm = '       ';
+            const response = pmSvc.search([searchTerm], {});
+
+            return response.then(x => {
+                assert.fail(x, "", "expected failed Promise");
+            }).catch(err => {
+                assert.strictEqual(err.constructor.name,
+                    'InvalidQueryStringError');
+            });
+        });
+
     });
 
     describe('.fetchSummary', function () {

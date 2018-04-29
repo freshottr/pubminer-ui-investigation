@@ -27,47 +27,42 @@ let pubMedApi = {
         let searchTerm = searchParams.searchTerm;
         let pubDateFilter = searchParams.pubDateFilter;
 
-        if (QueryHelper.isEmptyTerm(searchTerm)) {
-            // signal the caller that the (empty) results are ready
-            callback({searchTerm: '', itemsFound: 0, itemsReturned: 0, items: []});
-        } else {
+        const queryTerms = [
+            searchTerm,
+            config.get('PubMedService').searchFilter,
+            QueryHelper.getDateFilter(pubDateFilter)
+        ];
 
-            const queryTerms = [
-                searchTerm,
-                config.get('PubMedService').searchFilter,
-                QueryHelper.getDateFilter(pubDateFilter)
-            ];
-
-            console.log(`calling esearch for ${searchTerm}...`);
-            pmSvc.search(queryTerms, {
-                db: 'pubmed',
-            }, searchTerm).then(results => {
-                console.log(`calling elink...`);
-                return pmSvc.link({
-                    db: 'pmc',
-                    dbfrom: 'pubmed',
-                    linkname: 'pubmed_pmc',
-                    cmd: 'neighbor_history',
-                    query_key: results.querykey,
-                    WebEnv: results.webenv
-                });
-            }).then(linkResults => {
-                console.log(`calling pmc esearch for open access articles...`);
-                return pmSvc
-                    .search(['open access[filter]'], {
-                            query_key: linkResults.querykey,
-                            WebEnv: linkResults.webenv
-                        },
-                        searchTerm);
-            }).then(pmcSearchResults => {
-                //Override the search term
-                pmcSearchResults.searchTerm = searchTerm;
-                callback(pmcSearchResults);
-            }).catch(err => {
-                console.error(`error performing search ${err}`);
-                callback(DocumentHelper.searchErrorResponse(searchTerm, err));
+        console.log(`calling esearch for ${searchTerm}...`);
+        pmSvc.search(queryTerms, {
+            db: 'pubmed',
+        }, searchTerm).then(results => {
+            console.log(`calling elink...`);
+            return pmSvc.link({
+                db: 'pmc',
+                dbfrom: 'pubmed',
+                linkname: 'pubmed_pmc',
+                cmd: 'neighbor_history',
+                query_key: results.querykey,
+                WebEnv: results.webenv
             });
-        }
+        }).then(linkResults => {
+            console.log(`calling pmc esearch for open access articles...`);
+            return pmSvc
+                .search(['open access[filter]'], {
+                        query_key: linkResults.querykey,
+                        WebEnv: linkResults.webenv
+                    },
+                    searchTerm);
+        }).then(pmcSearchResults => {
+            //Override the search term
+            pmcSearchResults.searchTerm = searchTerm;
+            callback(pmcSearchResults);
+        }).catch(err => {
+            console.error(`error performing search ${err}`);
+            callback(DocumentHelper.searchErrorResponse(searchTerm, err));
+        });
+        // }
     },
 
     getSummaries: function(webenv, querykey, start, max, callback) {
@@ -108,11 +103,11 @@ let pubMedApi = {
         };
 
         pmSvc.fetchArticleDetails(pmId, options)
-            .then(results => callback(results))
             .catch(err => {
                 console.log(`unable to get abstract for PMID ${pmId}`, err);
                 return errorOf(`Unable to display abstract for PMID ${pmId}.`);
-            });
+            })
+            .then(results => callback(results));
     }
 };
 
