@@ -27,9 +27,16 @@ class PubMedService {
      *
      * @param queryTerms And Array of terms to query
      * @param options additional query parameters to be included with the request
+     * @param userSearchTerm the search term to use in error messages returned to the user
      * @return
      */
     search(queryTerms, options, userSearchTerm) {
+
+        userSearchTerm = userSearchTerm || queryTerms[0];
+
+        if (QueryHelper.isEmptyTerm(userSearchTerm)) {
+            return Promise.reject(new Errors.InvalidQueryStringError(userSearchTerm));
+        }
 
         const searchOptions = {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
@@ -47,8 +54,11 @@ class PubMedService {
             .then(response => {
                 const searchResult = DocHelper.extractSearchResults(response, queryTerms[0]);
                 console.log(`esearch found ${searchResult.itemsFound} for ${queryTerms[0]}`);
-                if (searchResult.itemsFound === "0") {
-                    throw new Errors.EmptySearchResultError(userSearchTerm || queryTerms[0]);
+                if (searchResult.itemsFound === 0) {
+                    throw new Errors.EmptySearchResultError(userSearchTerm);
+                }
+                if (searchResult.itemsFound > this.config.resultsLimit) {
+                    throw new Errors.TooManyResultsError(userSearchTerm, this.config.resultsLimit);
                 }
                 return searchResult;
             })

@@ -29,6 +29,12 @@ class EmptySearchResultError extends AppError {
     }
 }
 
+class TooManyResultsError extends AppError {
+    constructor(query, limit) {
+        super(ErrorSeverity.Warn, `Search for "${query}" returned over ${limit} results. Please refine your search`);
+    }
+}
+
 class InvalidQueryStringError extends AppError {
     constructor(query) {
         super(ErrorSeverity.Warn, `"${query}" is not a valid query string`);
@@ -43,6 +49,7 @@ class InvalidDocumentFormatError extends AppError {
 
 module.exports = {
     EmptySearchResultError: EmptySearchResultError,
+    TooManyResultsError: TooManyResultsError,
     InvalidQueryStringError: InvalidQueryStringError,
     InvalidDocumentFormatError: InvalidDocumentFormatError,
     Severity: ErrorSeverity
