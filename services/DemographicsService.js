@@ -2,6 +2,7 @@
 
 const AWS = require('aws-sdk');
 const DocHelper = require('../DocumentHelper');
+const Errors = require('../Errors');
 
 /**
  * Provides services for fetching demographic details for pubmed IDs
@@ -58,14 +59,16 @@ class DemographicsService {
                                 return {
                                     section: sec.section,
                                     text: sec.sentences.join(' ')}
-                            }),
+                            })
+                            .filter(block => !(block.section.toLowerCase() === 'abstract')),
                         dateProcessed: item.date_processed
                     };
                     return acc;
                 }, {});
-            },
-            err => {
-                console.log(`dynamo batchGet error: ${err}`)
+            })
+            .catch( err => {
+                console.log(`dynamo batchGet error: ${err}`);
+                throw new Errors.AppError(Errors.Severity.Danger, 'Internal error. Please try again.');
             });
     }
 }
