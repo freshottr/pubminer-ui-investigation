@@ -150,7 +150,7 @@ class DocumentHelper {
             .catch(err => {
                 // TODO: log the pmid/pmcid of the document
                 console.error(`error extracting abstract for detail document ${err}`, err);
-                throw new Errors.InvalidDocumentFormatError(err);
+                return { abstract: 'error extracting abstract for article ID'};
             });
     }
 
