@@ -12,8 +12,8 @@ describe('Configuration', function() {
                 "https://eutils.ncbi.nlm.nih.gov");
         });
 
-        it('defines a database', function (done) {
-            if(pubMedConfig.db) {
+        it('defines a default database', function (done) {
+            if(pubMedConfig.defaultDb) {
                 done();
             } else {
                 done(new Error("dd not defined for PMS configuration"));

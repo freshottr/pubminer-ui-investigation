@@ -1,28 +1,28 @@
 // search.js
-const config =  require('config');
+const config = require('config');
 const DocumentHelper = require('./DocumentHelper');
 const QueryHelper = require('./QueryHelper');
 const Errors = require('./Errors');
 
-const demoSvc = function() {
+const demoSvc = function () {
     const awsConfig = config.get('AwsConfig')
-    const DemographicsService  = require('./services/DemographicsService');
+    const DemographicsService = require('./services/DemographicsService');
     return new DemographicsService(awsConfig);
 }();
 
-const pmSvc = function() {
+const pmSvc = function () {
     const pmConfig = config.get('PubMedService');
     const pmService = require('./services/PubMedService');
     return pmService.create(pmConfig);
 }();
 
 let errorOf = (description) => {
-  return {error: description, severity: Errors.Severity.Danger};
+    return {error: description, severity: Errors.Severity.Danger};
 };
 
 let pubMedApi = {
 
-    search : function(searchParams, callback) {
+    search: function (searchParams) {
 
         let searchTerm = searchParams.searchTerm;
         let pubDateFilter = searchParams.pubDateFilter;
@@ -34,38 +34,35 @@ let pubMedApi = {
         ];
 
         console.log(`calling esearch for ${searchTerm}...`);
-        pmSvc.search(queryTerms, {
-            db: 'pubmed',
-        }, searchTerm).then(results => {
-            console.log(`calling elink...`);
-            return pmSvc.link({
-                db: 'pmc',
-                dbfrom: 'pubmed',
-                linkname: 'pubmed_pmc',
-                cmd: 'neighbor_history',
-                query_key: results.querykey,
-                WebEnv: results.webenv
-            });
-        }).then(linkResults => {
-            console.log(`calling pmc esearch for open access articles...`);
-            return pmSvc
-                .search(['open access[filter]'], {
+
+        return pmSvc
+            .search(queryTerms, {
+                db: 'pubmed',
+            }, searchTerm)
+            .then(results => {
+                console.log(`calling elink...`);
+                return pmSvc.link({
+                    db: 'pmc',
+                    dbfrom: 'pubmed',
+                    linkname: 'pubmed_pmc',
+                    cmd: 'neighbor_history',
+                    query_key: results.querykey,
+                    WebEnv: results.webenv
+                });
+            })
+            .then(linkResults => {
+                console.log(`calling pmc esearch for open access articles...`);
+                return pmSvc
+                    .search(['open access[filter]'], {
+                        db: 'pmc',
                         query_key: linkResults.querykey,
                         WebEnv: linkResults.webenv
                     },
-                    searchTerm);
-        }).then(pmcSearchResults => {
-            //Override the search term
-            pmcSearchResults.searchTerm = searchTerm;
-            callback(pmcSearchResults);
-        }).catch(err => {
-            console.error(`error performing search ${err}`);
-            callback(DocumentHelper.searchErrorResponse(searchTerm, err));
+                    searchTerm); //override any enriched search term with the user search term
         });
-        // }
     },
 
-    getSummaries: function(webenv, querykey, start, max, callback) {
+    getSummaries: function (webenv, querykey, start, max) {
 
         const environment = {
             webenv: webenv,
@@ -77,37 +74,27 @@ let pubMedApi = {
             start: start
         };
 
-        pmSvc.fetchSummary(environment, options)
+        return pmSvc
+            .fetchSummary(environment, options)
             .then(summaryResults => {
-                console.log(`summaryResult ${JSON.stringify(summaryResults)}`);
-                demoSvc
+                return demoSvc
                     .getDemographicDetailsForIds(summaryResults.result.uids)
                     .then(demoDetails => {
-                        return DocumentHelper
-                            .mergeDemographicAndSummaryResults(demoDetails, summaryResults);
-                    })
-                    .then(mergedData => {
-                        callback({items: mergedData})
+                        return {
+                            items: DocumentHelper
+                                .mergeDemographicAndSummaryResults(demoDetails, summaryResults)
+                        };
                     });
-            })
-            .catch(err => {
-                console.error(`unexpected error processing getSummaries ${err}`, err);
-                callback(errorOf('unexpected error performing search'));
             });
     },
 
-    fetchResultDetail: function (pmId, callback) {
+    fetchResultDetail: function (pmId) {
 
         const options = {
             db: 'pubmed'
         };
 
-        pmSvc.fetchArticleDetails(pmId, options)
-            .catch(err => {
-                console.log(`unable to get abstract for PMID ${pmId}`, err);
-                return errorOf(`Unable to display abstract for PMID ${pmId}.`);
-            })
-            .then(results => callback(results));
+        return pmSvc.fetchArticleDetails(pmId, options);
     }
 };
 

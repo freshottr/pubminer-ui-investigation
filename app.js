@@ -1,11 +1,12 @@
 // app.js
-var express = require('express');
-var path = require('path');
-var bodyparser = require('body-parser');
-var list = require('./routes/list');
-var results = require('./routes/results');
-var detail = require('./routes/detail');
-var app = express();
+const express = require('express');
+const path = require('path');
+const bodyparser = require('body-parser');
+const list = require('./routes/list');
+const results = require('./routes/results');
+const detail = require('./routes/detail');
+const app = express();
+const Errors = require('./Errors');
 
 require('dotenv').config();
 
@@ -43,6 +44,20 @@ app.use('/detail', detail);
 app.use((request, response, next) => {
     response.status(404);
     response.send('File could not be found');
+});
+
+
+app.use((err, req, res, next) => {
+    console.error(`in global error handler handling ${err.stack}`);
+    const errMsg = {
+        error: {
+            msg: err.message || 'An internal error occurred. Please try again',
+            severity: err.severity || Errors.Severity.Danger
+        }
+    };
+
+    const template = req.xhr ? 'messages' : 'results';
+    res.status(500).render(template, errMsg);
 });
 
 module.exports = app;

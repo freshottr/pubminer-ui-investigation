@@ -147,6 +147,7 @@ describe('PubMedService', function () {
             };
 
             const options = {
+                db: 'pmc',
                 start: 0,
                 max: 3,
             };
@@ -154,7 +155,7 @@ describe('PubMedService', function () {
             const pmMock = nock(`${pubMedConfig.baseUri}`)
                 .get(`${pubMedConfig.summaryPath}`)
                 .query({
-                    db: `${pubMedConfig.db}`,
+                    db: 'pmc',
                     retmax: options.max,
                     retstart: options.start,
                     WebEnv: environment.webenv,

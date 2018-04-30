@@ -1,7 +1,7 @@
 {
   "PubMedService": {
+    "defaultDb": "pubmed",
     "baseUri": "https://eutils.ncbi.nlm.nih.gov",
-    "db": "pubmed",
     "efetchPath": "/entrez/eutils/efetch.fcgi",
     "elinkPath": "/entrez/eutils/elink.fcgi",
     "searchPath": "/entrez/eutils/esearch.fcgi",
