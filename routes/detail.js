@@ -1,14 +1,15 @@
-let express = require("express");
-let router = express.Router();
-let pubMedQuery = require('../search');
+const router = require('express-promise-router')();
+const pubSvc = require('../search');
 
-router.get('/:pmid', (request, response) => {
+router.get('/:pmid', (request, response, next) => {
 
     let pmid = request.params["pmid"]
 
-    pubMedQuery.fetchResultDetail(pmid, (details) => {
-        response.render('abstractSections', {"data": details});
-    });
+    return pubSvc
+        .fetchResultDetail(pmid)
+        .then(details => {
+            response.render('abstractSections', {"data": details});
+        });
 });
 
 module.exports = router;

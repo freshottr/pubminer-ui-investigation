@@ -53,8 +53,8 @@ class PubMedService {
             // E-search
             .client(searchOptions)
             .then(response => {
-                const searchResult = DocHelper.extractSearchResults(response, queryTerms[0]);
-                console.log(`esearch found ${searchResult.itemsFound} for ${queryTerms[0]}`);
+                const searchResult = DocHelper.extractSearchResults(response, userSearchTerm);
+                console.log(`esearch found ${searchResult.itemsFound} for ${userSearchTerm}`);
                 if (searchResult.itemsFound === 0) {
                     throw new Errors.EmptySearchResultError(userSearchTerm);
                 }
@@ -82,7 +82,7 @@ class PubMedService {
             .then(response => {
                 console.log(`processing elink result`);
                 return DocHelper
-                    .extractEnvironmentFromLinkResults(response, options.querykey);
+                    .extractEnvironmentFromLinkResults(response, options.query_key);
             })
     }
 
@@ -99,7 +99,7 @@ class PubMedService {
             timeout: this.config.defaultTimeout,
             qs: {
                 // TODO: use the API key in the query parameters
-                db: this.config.db,
+                db: options.db || this.config.defaultDb,
                 WebEnv: environment.webenv,
                 query_key: environment.querykey,
                 retstart: options.start || 0,
