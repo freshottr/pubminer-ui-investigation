@@ -3,6 +3,7 @@
 const AWS = require('aws-sdk');
 const DocHelper = require('../DocumentHelper');
 const Errors = require('../Errors');
+const http = require('request-promise');
 
 /**
  * Provides services for fetching demographic details for pubmed IDs
@@ -69,6 +70,41 @@ class DemographicsService {
             .catch( err => {
                 console.log(`dynamo batchGet error: ${err.stack}`);
                 throw new Errors.AppError(Errors.Severity.Danger, 'Internal error. Please try again.');
+            });
+    }
+
+    /**
+     * Returns statistics from the latest update to the demogrpahic database
+     * @return a 'promise' of demographic update data
+     */
+    fetchLastDemoUpdate(callback) {
+
+        const updateStats = {
+            uri: 'http://pubminer-upload-test.s3.amazonaws.com/update_stats.json',
+            json: true
+        };
+
+        return http(updateStats)
+            .then(data => {
+                // convert and format the date as Month DD, YYYY
+                try {
+                    let updateDateUTC = new Date(data.update);
+                    let options = {year: "numeric", month: "long", day: "numeric", timeZone: "UTC"};
+                    let formattedDateString = updateDateUTC.toLocaleDateString("en-US", options);
+                    data.formattedDateString = formattedDateString;
+                } catch (err) {
+                    data.formattedDateString = data.update;
+                }
+
+                // parse the total items as an integer and add locale-specific
+                // formatting (e.g. comma separator)
+                data.total_items = parseInt(data.total_items).toLocaleString();
+
+                return data;
+            })
+            .catch (err => {
+                console.log(`error retrieving update statistics ${err.stack}`);
+                throw new Errors.AppError(Errors.Severity.Warning, "Internal error. Please try again.")
             });
     }
 }

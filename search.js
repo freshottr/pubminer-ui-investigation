@@ -95,7 +95,13 @@ let pubMedApi = {
         };
 
         return pmSvc.fetchArticleDetails(pmId, options);
+    },
+
+    fetchLastDemoUpdate: function() {
+
+        return demoSvc.fetchLastDemoUpdate();
     }
+
 };
 
 module.exports = pubMedApi;
