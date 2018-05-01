@@ -167,7 +167,7 @@ class DocumentHelper {
     }
 
     static groupSentencesBySection(sentences) {
-        const groupedSentences = sentences
+        const groupedSentences = (sentences || [])
             .reduce((acc, s) => {
                 acc[s.section] = (acc[s.section] || []);
                 acc[s.section].push(s.text);
