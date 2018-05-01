@@ -109,7 +109,6 @@ class PubMedService {
             qs: QueryHelper.mergeQueryOptions([
                 this.baseQueryOptions,
                 {
-                    // TODO: use the API key in the query parameters
                     db: options.db || this.config.defaultDb,
                     WebEnv: environment.webenv,
                     query_key: environment.querykey,
