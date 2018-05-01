@@ -10,7 +10,8 @@
     "resultsLimit": 10000,
     "elinkTimeout": 15000,
     "esearchTimeout": 5000,
-    "defaultTimeout": 3000
+    "defaultTimeout": 3000,
+    "queryOptions": {}
   },
 
   "AwsConfig": {

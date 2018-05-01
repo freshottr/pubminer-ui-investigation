@@ -80,5 +80,94 @@ describe('QueryTermHelper', function () {
         });
 
     });
+
+    describe('.mergeQueryOptions', function () {
+
+        it('returns an empty object for undefined array', function () {
+            const merged = QueryHelper.mergeQueryOptions(null);
+            const mergedString = JSON.stringify(merged);
+            assert.strictEqual(mergedString, JSON.stringify({}));
+        });
+
+        it('returns an empty object for empty array', function () {
+            const merged = QueryHelper.mergeQueryOptions([]);
+            const mergedString = JSON.stringify(merged);
+            assert.strictEqual(mergedString, JSON.stringify({}));
+        });
+
+        it('returns a single object unchanged', function () {
+            const baseOptions = {
+                retmax: 15,
+                api_key: "hello"
+            };
+            const merged = QueryHelper.mergeQueryOptions([baseOptions]);
+            assert.deepStrictEqual(merged, baseOptions)
+        });
+
+        it('combines all provided fields into the final object', function () {
+            const baseOptions = {
+                api_key: "hello"
+            };
+
+            const callOptions = {
+                retmax: 99
+            };
+
+            const expectedCombined = {
+                api_key: "hello",
+                retmax: 99
+            };
+
+            const merged = QueryHelper.mergeQueryOptions([baseOptions, callOptions]);
+            assert.deepStrictEqual(merged, expectedCombined);
+        });
+
+        it('combines all provided fields into the final object for multiple objects', function () {
+            const baseOptions = {
+                api_key: "hello"
+            };
+
+            const callOptions = {
+                retstart: 0
+            };
+
+            const serviceOptions = {
+                retmax: 99
+            };
+
+            const expectedCombined = {
+                api_key: "hello",
+                retmax: 99,
+                retstart: 0
+            };
+
+            const merged = QueryHelper.mergeQueryOptions([baseOptions, callOptions, serviceOptions]);
+            assert.deepStrictEqual(merged, expectedCombined);
+        });
+
+        it('overrides fields defined in later objects', function () {
+            const baseOptions = {
+                api_key: "hello"
+            };
+
+            const callOptions = {
+                retstart: 0,
+                retmax: 99
+            };
+
+            const overrideOptions = {
+                retstart: 20
+            };
+
+            const expectedCombined = {
+                api_key: "hello",
+                retmax: 99,
+                retstart: 20
+            };
+
+            const merged = QueryHelper.mergeQueryOptions([baseOptions, callOptions, overrideOptions]);
+            assert.deepStrictEqual(merged, expectedCombined);
+        });
+    });
 });
 

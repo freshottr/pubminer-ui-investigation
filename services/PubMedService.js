@@ -18,6 +18,7 @@ class PubMedService {
     constructor(config) {
         this.client = http;
         this.config = config;
+        this.baseQueryOptions = this.config.queryOptions;
     }
 
     /**
@@ -42,11 +43,15 @@ class PubMedService {
             uri: `${this.config.baseUri}${this.config.searchPath}`,
             json: true,
             timeout: this.config.esearchTimeout,
-            qs: Object.assign({
-                term: QueryHelper.combineSearchTerms(queryTerms),
-                retmode: 'json',
-                usehistory: 'y',
-            }, options)
+            qs: QueryHelper.mergeQueryOptions([
+                this.baseQueryOptions,
+                {
+                    term: QueryHelper.combineSearchTerms(queryTerms),
+                    retmode: 'json',
+                    usehistory: 'y',
+                },
+                options
+            ])
         };
 
         return this
@@ -71,10 +76,14 @@ class PubMedService {
             uri: `${this.config.baseUri}${this.config.elinkPath}`,
             json: true,
             timeout: this.config.elinkTimeout,
-            qs: Object.assign({
-                retmode: 'json',
-                usehistory: 'y',
-            }, options)
+            qs: QueryHelper.mergeQueryOptions([
+                this.baseQueryOptions,
+                {
+                    retmode: 'json',
+                    usehistory: 'y',
+                },
+                options
+            ])
         };
 
         return this
@@ -97,15 +106,16 @@ class PubMedService {
             uri: `${this.config.baseUri}${this.config.summaryPath}`,
             json: true,
             timeout: this.config.defaultTimeout,
-            qs: {
-                // TODO: use the API key in the query parameters
-                db: options.db || this.config.defaultDb,
-                WebEnv: environment.webenv,
-                query_key: environment.querykey,
-                retstart: options.start || 0,
-                retmax: options.max || 20, // TODO: use config value here
-                retmode: "json"
-            }
+            qs: QueryHelper.mergeQueryOptions([
+                this.baseQueryOptions,
+                {
+                    db: options.db || this.config.defaultDb,
+                    WebEnv: environment.webenv,
+                    query_key: environment.querykey,
+                    retstart: options.start || 0,
+                    retmax: options.max || 20, // TODO: use config value here
+                    retmode: "json"
+                }])
         };
 
         return this
@@ -128,10 +138,14 @@ class PubMedService {
             uri: `${this.config.baseUri}${this.config.efetchPath}`,
             json: true,
             timeout: this.config.defaultTimeout,
-            qs: Object.assign({
-                retmode: 'xml',
-                id: articleId
-            }, options)
+            qs: QueryHelper.mergeQueryOptions([
+                this.baseQueryOptions,
+                {
+                    retmode: 'xml',
+                    id: articleId
+                },
+                options
+            ])
         };
 
         console.log(`fetching details for ${articleId}`);
