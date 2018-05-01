@@ -67,7 +67,7 @@ class DemographicsService {
                 }, {});
             })
             .catch( err => {
-                console.log(`dynamo batchGet error: ${err}`);
+                console.log(`dynamo batchGet error: ${err.stack}`);
                 throw new Errors.AppError(Errors.Severity.Danger, 'Internal error. Please try again.');
             });
     }

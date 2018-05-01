@@ -56,6 +56,11 @@ describe('DocumentHelper', function () {
 
     describe('.groupSentencesBySection', function () {
 
+        it('handles undefined arrays', function () {
+            const grouped = DocHelper.groupSentencesBySection(null);
+            assert.strictEqual(grouped.length, 0);
+        });
+
         it('handles empty arrays', function () {
             const grouped = DocHelper.groupSentencesBySection([]);
             assert.strictEqual(grouped.length, 0);
