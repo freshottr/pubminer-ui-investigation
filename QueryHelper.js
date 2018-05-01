@@ -43,6 +43,12 @@ class QueryHelper {
             .slice(1)
             .reduce((acc, term) => `${acc} AND (${term})`, `(${validTerms[0]})`)
     }
+
+
+    static mergeQueryOptions(optionsArray) {
+        return (optionsArray || [])
+            .reduce((acc, opt) => Object.assign(acc, opt), {})
+    }
 }
 
 module.exports = QueryHelper;
