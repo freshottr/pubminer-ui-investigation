@@ -43,10 +43,15 @@
  - Start the application: `forever start ./bin/www`
 
 ### Additional Information
-#### Running Integration Tests with Cyprus
+#### Running Integration Tests with Cypress
  - ensure the application and database are running
- - run `npm run cyprus:open`
- - select `search_spec.js` from the Integration Test list. The tests should automatically start executing
+ - run `npm run cypress:open`
+ - select `search_spec.js` or `home_spec` from the Integration Test list. The tests should automatically start executing
+
+#### Running Unit Tests with Mocha
+- ensure the application and database are running
+- run `npm run mocha`
+- results are logged to the console
 
 #### PubMed API key
 The app will recognize a PubMed API key stored as configuration value. The PubMed API key should be put in `local.json` on the deployed machine under the `config` folder. The example below shows how to provide the API key for the application to use in service calls.
