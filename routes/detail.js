@@ -3,10 +3,8 @@ const pubSvc = require('../search');
 
 router.get('/:pmid', (request, response, next) => {
 
-    let pmid = request.params["pmid"]
-
     return pubSvc
-        .fetchResultDetail(pmid)
+        .fetchResultDetail(request.params.pmid)
         .then(details => {
             response.render('abstractSections', {"data": details});
         });

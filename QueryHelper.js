@@ -41,13 +41,13 @@ class QueryHelper {
 
         return validTerms
             .slice(1)
-            .reduce((acc, term) => `${acc} AND (${term})`, `(${validTerms[0]})`)
+            .reduce((acc, term) => `${acc} AND (${term})`, `(${validTerms[0]})`);
     }
 
 
     static mergeQueryOptions(optionsArray) {
         return (optionsArray || [])
-            .reduce((acc, opt) => Object.assign(acc, opt), {})
+            .reduce((acc, opt) => Object.assign(acc, opt), {});
     }
 }
 

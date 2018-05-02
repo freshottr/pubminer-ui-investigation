@@ -67,7 +67,7 @@ class PubMedService {
                     throw new Errors.TooManyResultsError(userSearchTerm, this.config.resultsLimit);
                 }
                 return searchResult;
-            })
+            });
     }
 
     link(options) {
@@ -92,7 +92,7 @@ class PubMedService {
                 console.log(`processing elink result`);
                 return DocHelper
                     .extractEnvironmentFromLinkResults(response, options.query_key);
-            })
+            });
     }
 
     /**

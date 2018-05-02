@@ -59,9 +59,10 @@ class DemographicsService {
                             .map(sec => {
                                 return {
                                     section: sec.section,
-                                    text: sec.sentences.join(' ')}
+                                    text: sec.sentences.join(' ')
+                                };
                             })
-                            .filter(block => !(block.section.toLowerCase() === 'abstract')),
+                            .filter(block => block.section.toLowerCase() !== 'abstract'),
                         dateProcessed: item.date_processed
                     };
                     return acc;
@@ -104,7 +105,7 @@ class DemographicsService {
             })
             .catch (err => {
                 console.log(`error retrieving update statistics ${err.stack}`);
-                throw new Errors.AppError(Errors.Severity.Warning, "Internal error. Please try again.")
+                throw new Errors.AppError(Errors.Severity.Warning, "Internal error. Please try again.");
             });
     }
 }
