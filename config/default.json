@@ -17,5 +17,10 @@
   "AwsConfig": {
     "region": "us-east-1",
     "endpoint": "https://dynamodb.us-east-1.amazonaws.com"
+  },
+
+  "DemographicsService" : {
+    "updateBaseUri": "http://pubminer-upload-test.s3.amazonaws.com",
+    "updateFilePath": "/update_stats.json"
   }
 }
