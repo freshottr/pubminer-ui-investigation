@@ -77,7 +77,7 @@ class DemographicsService {
      * Returns statistics from the latest update to the demogrpahic database
      * @return a 'promise' of demographic update data
      */
-    fetchLastDemoUpdate(callback) {
+    fetchLastDemoUpdate() {
 
         const updateStats = {
             uri: 'http://pubminer-upload-test.s3.amazonaws.com/update_stats.json',
