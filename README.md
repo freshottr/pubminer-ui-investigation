@@ -50,7 +50,7 @@
 
 #### Running Unit Tests with Mocha
 - ensure the application and database are running
-- run `npm run mocha`
+- run `npm run test`
 - results are logged to the console
 
 #### PubMed API key
