@@ -48,28 +48,14 @@ $.fn.addRowCheckboxHandler = function() {
 
 $(document).ready(function() {
 
+    // initialize pub date dropdown filter
     $(".selectpicker").selectpicker();
 
+    // On submit, hide the messages and display the indicator
     $("form").submit(function() {
         $("#searchForm button[type='submit']").prop("disabled", true);
         $(".pm-message-area").toggleClass("hidden");
         $(".search-loading").toggleClass("hidden");
-    });
-
-    $("#pm-datatable-whatsnew").DataTable({
-        columns: [
-            {data: "pmcid"},
-            {data: "title"}
-        ],
-        ajax: 'data/wndata.json',
-        dom: 't',
-        language: {
-            zeroRecords: "No records found"
-        },
-        initComplete: function() {
-            var rowCount = this.api().$('tbody tr').length;
-            $("#update-count").text(rowCount + " new articles added")
-        }
     });
 
     // Click handler for Select All

@@ -6,11 +6,11 @@ describe('Pubminer search results', function() {
            cy.visit('/list');
         });
 
-        let good_term = 'breast cancer'
+        let good_term = 'zika'
         let bad_term = 'lkajsdlkajsdlkajsdlkjasdlkajsdlkajsdlasjdlkasjda'
 
         it('returns a 200', function () {
-            cy.search(good_term);         
+            cy.search(good_term);
         });
 
         it('url includes search terms', function() {

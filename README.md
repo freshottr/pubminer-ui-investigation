@@ -36,19 +36,38 @@
  - Connect to a terminal window for the virtual machine.
  - Find the uid assigned to the application: `forever list`
  - Stop the application: `forever stop <uid>`
+ - Switch to the project directory
  - Refresh the source code from GitHub: `git pull origin master`
+ - Install any new dependencies: `npm install`
  - Generate the .css: `gulp`
  - Start the application: `forever start ./bin/www`
 
-
 ### Additional Information
-#### Running Integration Tests with Cyprus
+#### Running Integration Tests with Cypress
  - ensure the application and database are running
- - run `npm run cyprus:open`
- - select `search_spec.js` from the Integration Test list. The tests should automatically start executing
+ - run `npm run cypress:open`
+ - select `search_spec.js` or `home_spec` from the Integration Test list. The tests should automatically start executing
+
+#### Running Unit Tests with Mocha
+- ensure the application and database are running
+- run `npm run mocha`
+- results are logged to the console
 
 #### PubMed API key
-The app will recognize a PubMed API key stored as an environment variable called EUTILS_API_KEY. Alternatively, you can create a file called `.env` in the project root and store environment variables there as key/value pairs, e.g. `EUTILS_API_KEY=aBcDeFgHiJkLmNoPqRsT`. The project's `.gitignore` file is already configured to not allow check-in of `.env`.
+The app will recognize a PubMed API key stored as configuration value. The PubMed API key should be put in `local.json` on the deployed machine under the `config` folder. The example below shows how to provide the API key for the application to use in service calls.
+```
+<root>/config/local.json
+```
+```
+{
+  "PubMedService": {
+    "queryOptions": {
+      "api_key": "<your-api-key-here>"
+    }
+  }
+}
+```
+The project's `.gitignore` file is configured to not permit check-in of `local.json`.
 
 #### Building pmstyles.css
 PatternFly uses [Less](http://lesscss.org/) to compile PatternFly and Bootstrap style elements and project-specific
