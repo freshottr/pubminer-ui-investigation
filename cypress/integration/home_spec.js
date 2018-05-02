@@ -11,15 +11,12 @@ describe('The home page', function() {
 
     // TODO: figure out how the date and count will be implemented and check for those things
     it('displays a last updated date and article count', function(){
-        cy.get('#whatsnew').should('contain', 'Last update')
-        cy.get('#update-count').should('contain','new articles added') //any number
+        cy.get('#stat-items').should('contain', 'Last update occurred on')
+        cy.get('#stat-items').should('contain','new articles were added') //any number
+        cy.get('#stat-items').should('contain','sentences containing demographic information were discovered') //any number
+        cy.get('#stat-items').should('contain','tables containing demographic rows were discovered') //any number
     })
 
-    it('whats new table has a header', function(){
-        cy.get('#table1_wrapper').should('contain', 'PMC ID')
-    })
 
     // TODO: should we have an export button here?
 })
-
-
