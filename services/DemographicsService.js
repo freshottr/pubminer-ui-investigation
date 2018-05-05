@@ -48,7 +48,9 @@ class DemographicsService {
                 return data
                 .Responses
                 .demographics
-                .filter(item => item.errorStatus === null)
+                /* jshint eqeqeq: false */
+                .filter(item => item.errorStatus == null)
+                /* jshint eqeqeq: true */
                 .reduce((acc, item) => {
                     acc[item.pmcid] = {
                         pmcid: item.pmcid,
