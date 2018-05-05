@@ -5,7 +5,6 @@ const config = require('config');
 const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
 const pmSvc = require('../services/PubMedService').create(pubMedConfig);
-const Errors = require('../Errors');
 
 const demoConfig = config.get('DemographicsService');
 const demoSvc = function () {
@@ -157,7 +156,7 @@ describe('PubMedService', function () {
                 max: 3,
             };
 
-            const pmMock = nock(`${pubMedConfig.baseUri}`)
+            nock(`${pubMedConfig.baseUri}`)
                 .get(`${pubMedConfig.summaryPath}`)
                 .query({
                     db: 'pmc',
@@ -185,12 +184,7 @@ describe('PubMedService', function () {
 
             const awsS3Response = require('./data/statistics/update_stats.json');
 
-            const options = {
-                uri: 'http://pubminer-upload-test.s3.amazonaws.com/update_stats.json',
-                json: true
-            };
-
-            const pmMock = nock(`${demoConfig.updateBaseUri}`)
+            nock(`${demoConfig.updateBaseUri}`)
                 .get(`${demoConfig.updateFilePath}`)
                 .reply(200, awsS3Response);
 
