@@ -6,11 +6,11 @@ const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
 const pmSvc = require('../services/PubMedService').create(pubMedConfig);
 
-const demoConfig = config.get('DemographicsService');
 const demoSvc = function () {
     const awsConfig = config.get('AwsConfig');
+    const demoConfig = config.get('DemographicsService');
     const DemographicsService = require('../services/DemographicsService');
-    return new DemographicsService(awsConfig);
+    return new DemographicsService(awsConfig, demoConfig);
 }();
 
 describe('PubMedService', function () {
@@ -174,29 +174,6 @@ describe('PubMedService', function () {
                 assert.equal(result.result.uids[0], '29603827');
                 assert.equal(result.result.uids[1], '29489680');
                 assert.equal(result.result.uids[2], '29390338');
-            });
-
-        });
-    });
-
-    describe('.fetchLastDemoUpdate', function() {
-        it('returns statistics from the latest demographic database update' , function() {
-
-            const awsS3Response = require('./data/statistics/update_stats.json');
-
-            nock(`${demoConfig.updateBaseUri}`)
-                .get(`${demoConfig.updateFilePath}`)
-                .reply(200, awsS3Response);
-
-            const response = demoSvc.fetchLastDemoUpdate();
-
-            return response.then(result => {
-                assert.equal(result.update, '2018-05-01');
-                assert.equal(result.formattedDateString, 'May 1, 2018');
-                assert.equal(result.total_items, "301,225");
-                assert.equal(result.total_updates, 3359);
-                assert.equal(result.with_sentences, 2);
-                assert.equal(result.with_tables, 1010);
             });
 
         });

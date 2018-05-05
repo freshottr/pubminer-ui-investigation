@@ -5,8 +5,9 @@ const QueryHelper = require('./QueryHelper');
 
 const demoSvc = function () {
     const awsConfig = config.get('AwsConfig');
+    const demoConfig = config.get('DemographicsService');
     const DemographicsService = require('./services/DemographicsService');
-    return new DemographicsService(awsConfig);
+    return new DemographicsService(awsConfig, demoConfig);
 }();
 
 const pmSvc = function () {
