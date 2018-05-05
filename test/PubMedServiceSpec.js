@@ -9,7 +9,7 @@ const Errors = require('../Errors');
 
 const demoConfig = config.get('DemographicsService');
 const demoSvc = function () {
-    const awsConfig = config.get('AwsConfig')
+    const awsConfig = config.get('AwsConfig');
     const DemographicsService = require('../services/DemographicsService');
     return new DemographicsService(awsConfig);
 }();
@@ -99,8 +99,7 @@ describe('PubMedService', function () {
             return response.then(x => {
                 assert.fail(x, "", "expected failed Promise");
             }).catch(err => {
-                assert.strictEqual(err.constructor.name,
-                    'TooManyResultsError');;
+                assert.strictEqual(err.constructor.name, 'TooManyResultsError');
             });
         });
 

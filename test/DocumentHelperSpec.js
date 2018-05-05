@@ -73,7 +73,7 @@ describe('DocumentHelper', function () {
                return {
                    section: s,
                    text: texts[idx]
-               }
+               };
             });
 
             const grouped = DocHelper.groupSentencesBySection(sentences);
@@ -91,7 +91,7 @@ describe('DocumentHelper', function () {
                 return {
                     section: s,
                     text: texts[idx]
-                }
+                };
             });
 
             const grouped = DocHelper.groupSentencesBySection(sentences);
@@ -107,7 +107,7 @@ describe('DocumentHelper', function () {
             });
 
             const sec2Sentences = grouped[1].sentences;
-            var lastIdx = -1;
+            lastIdx = -1;
             sec2Sentences.forEach(sentence => {
                 let idx = texts.indexOf(sentence);
                 assert.strictEqual(idx > lastIdx, true);

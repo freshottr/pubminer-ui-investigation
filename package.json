@@ -8,11 +8,7 @@
     "start-dev": "nodemon --inspect ./bin/www",
     "test": "mocha",
     "cypress:open": "cypress open",
-    "lint": "jshint routes services"
-  },
-  "jshintConfig" : {
-    "node": true,
-    "esversion": 6
+    "lint": "jshint . --exclude node_modules,bower_components,public,cypress"
   },
   "contributors": [
     "Joe Bockskopf <jbockskopf@g.harvard.edu>",

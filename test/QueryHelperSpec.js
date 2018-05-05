@@ -62,7 +62,7 @@ describe('QueryTermHelper', function () {
         });
 
         it('removes empty terms', function () {
-            const term = 'xyz'
+            const term = 'xyz';
             const combinedTerms = QueryHelper.combineSearchTerms(['', term, null]);
             assert.strictEqual(combinedTerms, term);
         });
@@ -101,7 +101,7 @@ describe('QueryTermHelper', function () {
                 api_key: "hello"
             };
             const merged = QueryHelper.mergeQueryOptions([baseOptions]);
-            assert.deepStrictEqual(merged, baseOptions)
+            assert.deepStrictEqual(merged, baseOptions);
         });
 
         it('combines all provided fields into the final object', function () {

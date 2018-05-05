@@ -5,7 +5,7 @@ const QueryHelper = require('./QueryHelper');
 const Errors = require('./Errors');
 
 const demoSvc = function () {
-    const awsConfig = config.get('AwsConfig')
+    const awsConfig = config.get('AwsConfig');
     const DemographicsService = require('./services/DemographicsService');
     return new DemographicsService(awsConfig);
 }();
