@@ -99,7 +99,7 @@ describe('DocumentHelper', function () {
 
             const sec1Sentences = grouped[0].sentences;
 
-            var lastIdx = -1;
+            let lastIdx = -1;
             sec1Sentences.forEach(sentence => {
                 let idx = texts.indexOf(sentence);
                 assert.strictEqual(idx > lastIdx, true);

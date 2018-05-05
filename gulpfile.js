@@ -1,5 +1,5 @@
 // Compiles less files to ./public/css
-var gulp = require("gulp"),
+let gulp = require("gulp"),
     less = require("gulp-less"),
     plumber = require("gulp-plumber"),
     path = require("path");
