@@ -48,7 +48,7 @@ class DemographicsService {
                 return data
                 .Responses
                 .demographics
-                .filter(item => item.errorStatus == null)
+                .filter(item => item.errorStatus === null)
                 .reduce((acc, item) => {
                     acc[item.pmcid] = {
                         pmcid: item.pmcid,

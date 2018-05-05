@@ -3,6 +3,7 @@
   "esversion": 6,
   "unused": true,
   "undef": true,
+  "eqeqeq": true,
   "globals"   : {
     "describe"   : false,
     "it"         : false,
