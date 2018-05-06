@@ -6,13 +6,6 @@ const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
 const pmSvc = require('../services/PubMedService').create(pubMedConfig);
 
-const demoSvc = function () {
-    const awsConfig = config.get('AwsConfig');
-    const demoConfig = config.get('DemographicsService');
-    const DemographicsService = require('../services/DemographicsService');
-    return new DemographicsService(awsConfig, demoConfig);
-}();
-
 describe('PubMedService', function () {
 
     describe('.search', function () {
