@@ -18,21 +18,23 @@ class DocumentHelper {
      * @return An object mapping the `uid` to the linked ID
      */
     static getLinkedIdsByType(summaryDocument, idType, xform) {
-        return summaryDocument
-            .result
-            .uids
-            .reduce((acc, uid) => {
-                const linkedId = summaryDocument
-                    .result[uid]
-                    .articleids
-                    .find(idObj => idObj.idtype === idType);
-
-                if (linkedId) {
-                    acc[uid] = xform(linkedId.value);
-                }
-
-                return acc;
-            }, {});
+        xform = xform || ((x) => x);
+        try {
+            return summaryDocument
+                .result
+                .uids
+                .reduce((acc, uid) => {
+                    const articleIds = (summaryDocument.result[uid].articleids || []);
+                    const linkedId = articleIds.find(idObj => idObj.idtype === idType);
+                    if (linkedId) {
+                        acc[uid] = xform(linkedId.value);
+                    }
+                    return acc;
+                }, {});
+        } catch(err) {
+            console.error(`error performing getLinkedIdsByType ${err}`, err);
+            throw new Errors.InvalidDocumentFormatError(err);
+        }
     }
 
     /**

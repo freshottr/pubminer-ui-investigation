@@ -2,6 +2,7 @@
 
 const assert = require('assert');
 const DocHelper = require('../DocumentHelper');
+const Errors = require('../Errors');
 const fs = require('fs');
 const fsOptions = {
     encoding: 'utf-8',
@@ -28,12 +29,30 @@ describe('DocumentHelper', function () {
 
     describe('.getLinkedIdsByType', function () {
 
+        it('raises  uids field', function(){
+            const docResult = {
+                result: {
+                    notUids: null
+                }
+            };
+            assert.throws(function () {
+                return DocHelper.getLinkedIdsByType(docResult);
+            }, new Errors.InvalidDocumentFormatError(
+                new TypeError(`Cannot read property 'reduce' of undefined`)));
+        });
+
         it('returns a map of uids to id-type', function () {
+            const summary = require('./data/summary/pubmed-esummary-success.json');
+            const linkedIds = DocHelper.getLinkedIdsByType(summary, "pmc");
+            assert.strictEqual(linkedIds["29489680"], 'PMC5851734');
+            assert.strictEqual(linkedIds["29390338"], 'PMC5815750');
 
         });
 
         it('removes IDs without the linked ID type from the result', function () {
-
+            const summary = require('./data/summary/pubmed-esummary-success.json');
+            const linkedIds = DocHelper.getLinkedIdsByType(summary, "pmc");
+            assert.strictEqual(linkedIds["29603827"], undefined);
         });
 
     });
