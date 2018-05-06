@@ -1,5 +1,8 @@
 # PubMiner
 
+[![codecov](https://codecov.io/gh/CS599-MEDLINE/pubminer-web-app/branch/master/graph/badge.svg)](https://codecov.io/gh/CS599-MEDLINE/pubminer-web-app)
+[![build status](https://travis-ci.org/CS599-MEDLINE/pubminer-web-app.svg?branch=master)](https://travis-ci.org/CS599-MEDLINE/pubminer-web-app)
+
 ### Running PubMiner Locally
 #### Install Required Software and Tools
  - Install `Node.js®` and `npm` (node package manager). The installer at [nodejs.org](https://nodejs.org) will handle both of those for you
