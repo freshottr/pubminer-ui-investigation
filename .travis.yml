@@ -3,10 +3,10 @@ language:
 node_js:
 - "stable"
 
-install:
-- npm install -g codecov
+#install:
+#- npm install -g codecov
 
 script:
 - npm run lint
 - istanbul cover ./node_modules/mocha/bin/_mocha --reporter lcovonly -- -R spec
-- codecov
+#- codecov
