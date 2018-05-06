@@ -25,7 +25,7 @@ class DocumentHelper {
                 const linkedId = summaryDocument
                     .result[uid]
                     .articleids
-                    .find(idObj => idObj.idtype === idType)
+                    .find(idObj => idObj.idtype === idType);
 
                 if (linkedId) {
                     acc[uid] = xform(linkedId.value);

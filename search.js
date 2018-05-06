@@ -2,12 +2,12 @@
 const config = require('config');
 const DocumentHelper = require('./DocumentHelper');
 const QueryHelper = require('./QueryHelper');
-const Errors = require('./Errors');
 
 const demoSvc = function () {
-    const awsConfig = config.get('AwsConfig')
+    const awsConfig = config.get('AwsConfig');
+    const demoConfig = config.get('DemographicsService');
     const DemographicsService = require('./services/DemographicsService');
-    return new DemographicsService(awsConfig);
+    return new DemographicsService(awsConfig, demoConfig);
 }();
 
 const pmSvc = function () {
@@ -15,10 +15,6 @@ const pmSvc = function () {
     const pmService = require('./services/PubMedService');
     return pmService.create(pmConfig);
 }();
-
-let errorOf = (description) => {
-    return {error: description, severity: Errors.Severity.Danger};
-};
 
 let pubMedApi = {
 

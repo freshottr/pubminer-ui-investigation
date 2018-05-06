@@ -5,14 +5,6 @@ const config = require('config');
 const nock = require('nock');
 const pubMedConfig = config.get('PubMedService');
 const pmSvc = require('../services/PubMedService').create(pubMedConfig);
-const Errors = require('../Errors');
-
-const demoConfig = config.get('DemographicsService');
-const demoSvc = function () {
-    const awsConfig = config.get('AwsConfig')
-    const DemographicsService = require('../services/DemographicsService');
-    return new DemographicsService(awsConfig);
-}();
 
 describe('PubMedService', function () {
 
@@ -99,8 +91,7 @@ describe('PubMedService', function () {
             return response.then(x => {
                 assert.fail(x, "", "expected failed Promise");
             }).catch(err => {
-                assert.strictEqual(err.constructor.name,
-                    'TooManyResultsError');;
+                assert.strictEqual(err.constructor.name, 'TooManyResultsError');
             });
         });
 
@@ -158,7 +149,7 @@ describe('PubMedService', function () {
                 max: 3,
             };
 
-            const pmMock = nock(`${pubMedConfig.baseUri}`)
+            nock(`${pubMedConfig.baseUri}`)
                 .get(`${pubMedConfig.summaryPath}`)
                 .query({
                     db: 'pmc',
@@ -176,34 +167,6 @@ describe('PubMedService', function () {
                 assert.equal(result.result.uids[0], '29603827');
                 assert.equal(result.result.uids[1], '29489680');
                 assert.equal(result.result.uids[2], '29390338');
-            });
-
-        });
-    });
-
-    describe('.fetchLastDemoUpdate', function() {
-        it('returns statistics from the latest demographic database update' , function() {
-
-            const awsS3Response = require('./data/statistics/update_stats.json');
-
-            const options = {
-                uri: 'http://pubminer-upload-test.s3.amazonaws.com/update_stats.json',
-                json: true
-            };
-
-            const pmMock = nock(`${demoConfig.updateBaseUri}`)
-                .get(`${demoConfig.updateFilePath}`)
-                .reply(200, awsS3Response);
-
-            const response = demoSvc.fetchLastDemoUpdate();
-
-            return response.then(result => {
-                assert.equal(result.update, '2018-05-01');
-                assert.equal(result.formattedDateString, 'May 1, 2018');
-                assert.equal(result.total_items, "301,225");
-                assert.equal(result.total_updates, 3359);
-                assert.equal(result.with_sentences, 2);
-                assert.equal(result.with_tables, 1010);
             });
 
         });

@@ -18,6 +18,6 @@ describe('Configuration', function() {
             } else {
                 done(new Error("dd not defined for PMS configuration"));
             }
-        })
+        });
     });
 });

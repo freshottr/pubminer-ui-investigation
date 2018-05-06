@@ -18,7 +18,7 @@ class QueryHelper {
             default:
                 return "";
         }
-    };
+    }
 
     /**
      * Joins all terms using a conjunction. Empty and undefined terms

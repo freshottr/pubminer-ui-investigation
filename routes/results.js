@@ -4,7 +4,7 @@ const pubSvc = require('../search');
 const rowRequestSize = 20;
 
 router.get('/', (request, response, next) => {
-
+    /* jshint unused: vars */
     return pubSvc.search(request.query)
         .then(qr => {
             return pubSvc
@@ -19,7 +19,7 @@ router.get('/', (request, response, next) => {
 });
 
 router.get('/:webenv/:querykey', (req, res, next) => {
-
+    /* jshint unused: vars */
     // Get summaries for result rows
     return pubSvc
         .getSummaries(req.params.webenv, req.params.querykey, req.query.start, rowRequestSize)

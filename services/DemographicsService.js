@@ -13,10 +13,14 @@ class DemographicsService {
     /**
      * Constructs a new service backed by the AWS docClient
      */
-    constructor(config) {
-        AWS.config.update(config);
+    constructor(awsConfig, democonfig) {
+        AWS.config.update(awsConfig);
         AWS.config.setPromisesDependency(null);
         this.docClient = new AWS.DynamoDB.DocumentClient();
+        this.updateStats = {
+            uri: `${democonfig.updateBaseUri}${democonfig.updateFilePath}`,
+            json: true
+        };
     }
 
     /**
@@ -48,7 +52,9 @@ class DemographicsService {
                 return data
                 .Responses
                 .demographics
+                /* jshint eqeqeq: false */
                 .filter(item => item.errorStatus == null)
+                /* jshint eqeqeq: true */
                 .reduce((acc, item) => {
                     acc[item.pmcid] = {
                         pmcid: item.pmcid,
@@ -80,26 +86,24 @@ class DemographicsService {
      */
     fetchLastDemoUpdate() {
 
-        const updateStats = {
-            uri: 'http://pubminer-upload-test.s3.amazonaws.com/update_stats.json',
-            json: true
-        };
-
-        return http(updateStats)
-            .then(data => {
+        return http(this.updateStats)
+            .then( data => {
                 // convert and format the date as Month DD, YYYY
                 try {
-                    let updateDateUTC = new Date(data.update);
-                    let options = {year: "numeric", month: "long", day: "numeric", timeZone: "UTC"};
-                    let formattedDateString = updateDateUTC.toLocaleDateString("en-US", options);
-                    data.formattedDateString = formattedDateString;
+                    const options = {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                        timeZone: "UTC"
+                    };
+                    data.formattedDateString = (new Date(data.update)).toLocaleDateString("en-US", options);
                 } catch (err) {
                     data.formattedDateString = data.update;
                 }
 
                 // parse the total items as an integer and add locale-specific
                 // formatting (e.g. comma separator)
-                data.total_items = parseInt(data.total_items).toLocaleString();
+                data.total_items = parseInt(data.total_items || 0).toLocaleString();
 
                 return data;
             })

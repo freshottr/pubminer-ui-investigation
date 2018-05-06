@@ -42,12 +42,14 @@ app.use('/detail', detail);
 
 // Handle anything we don't specifically recognize
 app.use((request, response, next) => {
+    /* jshint unused: vars */
     response.status(404);
     response.send('File could not be found');
 });
 
 
 app.use((err, req, res, next) => {
+    /* jshint unused: vars */
     console.error(`in global error handler handling ${err.stack}`);
     const errMsg = {
         error: {
