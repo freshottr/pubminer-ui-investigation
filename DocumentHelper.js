@@ -35,17 +35,6 @@ class DocumentHelper {
             }, {});
     }
 
-    static searchErrorResponse(query, error) {
-        return {
-            searchTerm: query,
-            itemsFound: 0,
-            itemsReturned: 0,
-            error: error.message || 'An unexpected error occurred. Please try again.',
-            severity: error.severity || Errors.Severity.Danger
-        };
-    }
-
-
     /**
      * Merges the demographic data and esummary data from the PCM data into a PubMiner
      * summary result
