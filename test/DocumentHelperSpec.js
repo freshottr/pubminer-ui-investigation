@@ -11,6 +11,18 @@ const fsOptions = {
 
 describe('DocumentHelper', function () {
 
+    describe('.stripLetterFromId', function () {
+        it('returns numeric portion of the identifier', function () {
+            const id = DocHelper.stripLettersFromId('PMC12345');
+            assert.strictEqual(id, '12345');
+        });
+
+        it('returns pure numeric identifiers unchanged', function () {
+           const id = DocHelper.stripLettersFromId('12345');
+           assert.strictEqual(id, '12345');
+        });
+    });
+
     describe('.extractAbstract', function () {
 
         it('returns text for simple text abstract', function () {

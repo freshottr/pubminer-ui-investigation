@@ -5,6 +5,10 @@ const Errors     = require('./Errors');
 
 class DocumentHelper {
 
+    static stripLettersFromId(pmcid) {
+        return pmcid.replace(/\D/g,'');
+    }
+
     /**
      * Returns a map of the summary's `uid`s to IDs of type `idType`. `uid`s that
      * to not have a linked ID of type `idType` are removed from the result set.
@@ -45,7 +49,7 @@ class DocumentHelper {
     static mergeDemographicAndSummaryResults(demoDetails, summaryResults) {
         // TODO: Address #54 here
         const linkedIds = DocumentHelper
-            .getLinkedIdsByType(summaryResults, 'pmid', x => x);
+            .getLinkedIdsByType(summaryResults, 'pmid', this.stripLettersFromId);
         return summaryResults
             .result
             .uids
