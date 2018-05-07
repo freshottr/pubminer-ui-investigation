@@ -38,6 +38,19 @@ describe('DocumentHelper', function () {
 
     });
 
+    describe('.extractSearchResults', function () {
+
+        it('extracts meta information from NCBI search results', function () {
+            const results = require('./data/search/pubmed_search_success');
+            const query = 'my-search-term';
+            const er = DocHelper.extractSearchResults(results, query);
+            assert.strictEqual(er.itemsFound, parseInt(results.esearchresult.count));
+            assert.strictEqual(er.searchTerm, query);
+            assert.strictEqual(er.itemsReturned, results.esearchresult.idlist.length);
+            assert.strictEqual(er.webenv, results.esearchresult.webenv);
+            assert.strictEqual(er.querykey, results.esearchresult.querykey);
+        });
+    });
 
     describe('.getLinkedIdsByType', function () {
 
@@ -65,22 +78,6 @@ describe('DocumentHelper', function () {
             const summary = require('./data/summary/pubmed-esummary-success.json');
             const linkedIds = DocHelper.getLinkedIdsByType(summary, "pmc");
             assert.strictEqual(linkedIds["29603827"], undefined);
-        });
-
-    });
-
-    describe('.mergeDemographicAndSummaryResults', function () {
-
-        it('returns all items from the summary in the same order', function () {
-
-        });
-
-        it('includes demographic details where available', function () {
-
-        });
-
-        it('returns the expected attributes for each item', function () {
-
         });
 
     });
@@ -145,11 +142,26 @@ describe('DocumentHelper', function () {
                 lastIdx = idx;
             });
         });
-
-
     });
 
+    describe('.mergeDemographicAndSummaryResults', function () {
 
-    //TODO: add tests for other `DocumentHelper` methods
+        const demoDetails = require('./data/demographics/fake_demo_data.json');
+        const summary = require('./data/summary/pubmed-esummary-success.json');
 
+        it('returns all items from the summary in the same order', function () {
+            DocHelper.mergeDemographicAndSummaryResults(demoDetails, summary);
+            // TODO: add validations
+
+        });
+
+        it('includes demographic details where available', function () {
+
+        });
+
+        it('returns the expected attributes for each item', function () {
+
+        });
+
+    });
 });
