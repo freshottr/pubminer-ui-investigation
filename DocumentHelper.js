@@ -32,7 +32,6 @@ class DocumentHelper {
                     return acc;
                 }, {});
         } catch(err) {
-            console.error(`error performing getLinkedIdsByType ${err}`, err);
             throw new Errors.InvalidDocumentFormatError(err);
         }
     }
@@ -78,7 +77,6 @@ class DocumentHelper {
                 itemsReturned: parseInt(searchDocument.esearchresult.retmax)
             };
         } catch (err) {
-            console.error(`error extracting search results`, err);
             throw new Errors.InvalidDocumentFormatError(err);
         }
     }
@@ -101,7 +99,6 @@ class DocumentHelper {
             }
 
         } catch (err) {
-            console.error(`error extract env from link result`, err);
             throw new Errors.InvalidDocumentFormatError(err);
         }
     }
